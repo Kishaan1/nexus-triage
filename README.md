@@ -9,6 +9,7 @@ TRACK_ID=PS01
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://www.w3.org/Style/CSS/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://javascript.info/)
 
+**Live Demo:** [https://nexus-triage-1.onrender.com](https://nexus-triage-1.onrender.com)
 
 ## Architectural Summary
 NexusTriage-OS is a state-of-the-art Patient Intake Triage Assistant built using a lightweight Flask backend and a highly dynamic, zero-dependency HTML5/CSS3/Vanilla JS frontend. The system acts as a "Grounded Clinical Routing Engine." 
