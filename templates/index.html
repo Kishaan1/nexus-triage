@@ -3,39 +3,41 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>NEXUS // TRIAGE-OS · PS01</title>
-<meta name="description" content="Cyber-clinical AI patient intake triage assistant — routes walk-in patients using grounded rules. Not a diagnostic tool."/>
+<title>NEXUS // TRIAGE-OS · Clinical Intake Intelligence · PS01</title>
+<meta name="description" content="Cyber-clinical AI patient intake triage assistant — routes walk-in patients using grounded rules and zero-diagnosis guardrails."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-<style>{% raw %}
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
 /* ── TOKENS ─────────────────────────────────────────── */
 :root{
-  --obs:#050508; --s0:#08090f; --s1:rgba(10,14,26,0.8); --s2:rgba(15,18,35,0.6);
-  --cyan:#22e8f0; --cyanD:rgba(34,232,240,0.15); --cyanB:rgba(34,232,240,0.2);
-  --vio:#a855f7;  --vioD:rgba(168,85,247,0.12);  --vioB:rgba(168,85,247,0.25);
-  --red:#ef4444;  --redD:rgba(239,68,68,0.12);   --redB:rgba(239,68,68,0.35);
-  --amb:#f59e0b;  --ambD:rgba(245,158,11,0.12);  --ambB:rgba(245,158,11,0.35);
-  --grn:#22c55e;  --grnD:rgba(34,197,94,0.1);    --grnB:rgba(34,197,94,0.3);
-  --zinc:#71717a; --zincD:rgba(113,113,122,0.1);
-  --t0:#f4f4f6; --t1:#a1a1aa; --t2:#52525b; --t3:#27272a;
-  --ff:'Plus Jakarta Sans',system-ui,sans-serif;
+  --obs:#030508; --s0:#070913; --s1:rgba(10,14,28,0.82); --s2:rgba(15,20,40,0.65);
+  --cyan:#22e8f0; --cyanD:rgba(34,232,240,0.15); --cyanB:rgba(34,232,240,0.22);
+  --vio:#a855f7;  --vioD:rgba(168,85,247,0.14);  --vioB:rgba(168,85,247,0.28);
+  --red:#ef4444;  --redD:rgba(239,68,68,0.14);   --redB:rgba(239,68,68,0.38);
+  --amb:#f59e0b;  --ambD:rgba(245,158,11,0.14);  --ambB:rgba(245,158,11,0.38);
+  --grn:#22c55e;  --grnD:rgba(34,197,94,0.12);   --grnB:rgba(34,197,94,0.32);
+  --zinc:#71717a; --zincD:rgba(113,113,122,0.12);
+  --t0:#f8fafc; --t1:#94a3b8; --t2:#64748b; --t3:#334155;
+  --ff:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
   --fm:'JetBrains Mono','Roboto Mono',monospace;
   --r4:4px; --r8:8px; --r12:12px; --r16:16px; --r20:20px; --r24:24px;
-  --blur:blur(16px);
-  --sh-card:0 8px 40px rgba(0,0,0,0.55),0 2px 8px rgba(0,0,0,0.4);
+  --blur:blur(18px);
+  --sh-card:0 12px 48px rgba(0,0,0,0.65),0 2px 10px rgba(0,0,0,0.45);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{
   font-family:var(--ff);background:var(--obs);color:var(--t0);
   min-height:100vh;overflow-x:hidden;cursor:none;
-  background-image:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(34,232,240,0.04),transparent);
+  background-image:
+    radial-gradient(ellipse 90% 60% at 50% -15%,rgba(34,232,240,0.07),transparent),
+    radial-gradient(ellipse 70% 50% at 85% 90%,rgba(168,85,247,0.05),transparent);
 }
 /* scanlines */
 body::after{
   content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.025) 2px,rgba(0,0,0,0.025) 4px);
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.02) 2px,rgba(0,0,0,0.02) 4px);
 }
 @media(hover:none){body{cursor:auto}}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
@@ -44,20 +46,20 @@ body::after{
 #cr,#cd,#cl{position:fixed;top:0;left:0;pointer-events:none;z-index:99999;transform:translate(-50%,-50%)}
 #cr{
   width:38px;height:38px;border:1.5px solid var(--cyan);border-radius:50%;
-  box-shadow:0 0 10px rgba(34,232,240,0.35),inset 0 0 8px rgba(34,232,240,0.04);
+  box-shadow:0 0 12px rgba(34,232,240,0.4),inset 0 0 8px rgba(34,232,240,0.06);
   transition:width .22s cubic-bezier(.34,1.56,.64,1),height .22s cubic-bezier(.34,1.56,.64,1),
              border-color .18s,box-shadow .18s;
 }
-#cd{width:5px;height:5px;background:var(--cyan);border-radius:50%;box-shadow:0 0 6px var(--cyan)}
+#cd{width:5px;height:5px;background:var(--cyan);border-radius:50%;box-shadow:0 0 8px var(--cyan)}
 #cl{
-  font-family:var(--fm);font-size:8px;letter-spacing:.12em;color:var(--cyan);
+  font-family:var(--fm);font-size:8px;letter-spacing:.14em;color:var(--cyan);
   text-transform:uppercase;opacity:0;transition:opacity .18s;white-space:nowrap;
   text-shadow:0 0 8px var(--cyan);margin-top:24px;
 }
-body.ch #cr{width:54px;height:54px;border-color:var(--vio);box-shadow:0 0 14px rgba(168,85,247,.45),inset 0 0 12px rgba(168,85,247,.05)}
-body.ch #cd{background:var(--vio);box-shadow:0 0 8px var(--vio)}
+body.ch #cr{width:54px;height:54px;border-color:var(--vio);box-shadow:0 0 16px rgba(168,85,247,.5),inset 0 0 12px rgba(168,85,247,.08)}
+body.ch #cd{background:var(--vio);box-shadow:0 0 10px var(--vio)}
 body.ch #cl{opacity:1}
-@media(hover:none){#cr,#cd,#cl{display:none}}
+@media(hover:none){ #cr, #cd, #cl { display: none; } }
 
 /* ── CANVAS ──────────────────────────────────────────── */
 #bgc{position:fixed;inset:0;z-index:0;pointer-events:none}
@@ -67,496 +69,605 @@ body.ch #cl{opacity:1}
 
 /* ── NAV ─────────────────────────────────────────────── */
 nav{
-  position:sticky;top:0;z-index:100;height:58px;
+  position:sticky;top:0;z-index:100;height:62px;
   backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
-  background:rgba(5,5,8,.88);border-bottom:1px solid rgba(34,232,240,.12);
+  background:rgba(5,7,12,.88);border-bottom:1px solid rgba(34,232,240,.15);
   display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 28px;
 }
-.brand{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:12px;flex-shrink:0;cursor:pointer}
 .brand-ico{
-  width:34px;height:34px;border-radius:8px;font-size:17px;
+  width:36px;height:36px;border-radius:9px;font-size:18px;
   display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(135deg,rgba(34,232,240,.18),rgba(168,85,247,.18));
-  border:1px solid rgba(34,232,240,.3);box-shadow:0 0 14px rgba(34,232,240,.18);
+  background:linear-gradient(135deg,rgba(34,232,240,.2),rgba(168,85,247,.2));
+  border:1px solid rgba(34,232,240,.35);box-shadow:0 0 16px rgba(34,232,240,.2);
   position:relative;overflow:hidden;
 }
 .brand-ico::after{
   content:'';position:absolute;inset:0;
-  background:linear-gradient(110deg,transparent 35%,rgba(34,232,240,.15) 50%,transparent 65%);
+  background:linear-gradient(110deg,transparent 35%,rgba(34,232,240,.2) 50%,transparent 65%);
   animation:shim 3s linear infinite;
 }
 @keyframes shim{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
 .brand-name{
-  font-family:var(--fm);font-size:13.5px;font-weight:700;letter-spacing:.09em;
-  background:linear-gradient(90deg,#fff 0%,var(--cyan) 55%,var(--vio) 100%);
+  font-family:var(--fm);font-size:14px;font-weight:800;letter-spacing:.09em;
+  background:linear-gradient(90deg,#fff 0%,var(--cyan) 50%,var(--vio) 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 .brand-sub{font-family:var(--fm);font-size:8.5px;color:var(--t2);letter-spacing:.18em;text-transform:uppercase}
-.nav-mid{display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:8.5px;color:#22c55e;letter-spacing:.14em;text-transform:uppercase}
-.sdot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px #22c55e;animation:spulse 2s ease infinite}
-@keyframes spulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.82)}}
-.nav-r{display:flex;align-items:center;gap:8px}
+.nav-mid{display:flex;align-items:center;gap:16px}
+.nav-status{display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:8.5px;color:#22c55e;letter-spacing:.14em;text-transform:uppercase}
+.sdot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;animation:spulse 2s ease infinite}
+@keyframes spulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.nav-btn{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:6px;
+  color:var(--t1);font-family:var(--fm);font-size:9px;letter-spacing:.1em;padding:5px 10px;
+  cursor:pointer;transition:all .2s;text-transform:uppercase;
+}
+.nav-btn:hover{background:rgba(34,232,240,.12);border-color:var(--cyan);color:var(--cyan)}
+.nav-r{display:flex;align-items:center;gap:10px}
 .disc-badge{
-  padding:5px 11px;border-radius:20px;border:1px solid var(--redB);
-  background:rgba(239,68,68,.07);font-family:var(--fm);font-size:8px;
-  color:#fca5a5;letter-spacing:.09em;text-transform:uppercase;white-space:nowrap;
+  padding:5px 12px;border-radius:20px;border:1px solid var(--redB);
+  background:rgba(239,68,68,.08);font-family:var(--fm);font-size:8.5px;
+  color:#fca5a5;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;
 }
 .tid-badge{
-  padding:4px 9px;border-radius:6px;border:1px solid var(--vioB);
-  background:var(--vioD);font-family:var(--fm);font-size:8.5px;
+  padding:5px 10px;border-radius:6px;border:1px solid var(--vioB);
+  background:var(--vioD);font-family:var(--fm);font-size:9px;
   color:var(--vio);letter-spacing:.09em;font-weight:700;
 }
-@media(max-width:720px){.disc-badge,.nav-mid{display:none}.brand-name{font-size:11px}}
+@media(max-width:768px){.disc-badge,.nav-status{display:none}.brand-name{font-size:12px}}
 
 /* ── LAYOUT ──────────────────────────────────────────── */
 main{
   flex:1;padding:28px 28px 56px;
-  display:grid;grid-template-columns:minmax(340px,420px) 1fr;
-  gap:20px;align-items:start;
-  max-width:1380px;margin:0 auto;width:100%;
+  display:grid;grid-template-columns:minmax(360px,440px) 1fr;
+  gap:24px;align-items:start;
+  max-width:1440px;margin:0 auto;width:100%;
 }
-@media(max-width:860px){main{grid-template-columns:1fr;padding:16px 16px 40px}}
+@media(max-width:920px){main{grid-template-columns:1fr;padding:16px 16px 40px}}
 
 /* ── GLASS CARD ──────────────────────────────────────── */
 .card{
   backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
   background:var(--s1);
   border:1px solid var(--cyanB);border-radius:var(--r20);
-  box-shadow:var(--sh-card),0 0 0 0 rgba(34,232,240,0);
+  box-shadow:var(--sh-card);
   transition:border-color .3s,box-shadow .3s;
-  transform-style:preserve-3d;will-change:transform;
   position:relative;overflow:hidden;
 }
-.card:hover{border-color:rgba(34,232,240,.35);box-shadow:var(--sh-card),0 0 28px rgba(34,232,240,.07)}
+.card:hover{border-color:rgba(34,232,240,.4);box-shadow:var(--sh-card),0 0 32px rgba(34,232,240,.09)}
 .glare{
   position:absolute;inset:0;pointer-events:none;border-radius:inherit;
-  background:radial-gradient(circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.045) 0%,transparent 55%);
+  background:radial-gradient(circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.05) 0%,transparent 60%);
   opacity:0;transition:opacity .25s;
 }
 .card:hover .glare{opacity:1}
-.ci{padding:26px}
+.ci{padding:28px}
 
 /* ── CARD HEADER ─────────────────────────────────────── */
-.ch-row{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.ch-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.ch-left{display:flex;align-items:center;gap:12px}
 .ch-ico{
-  width:34px;height:34px;border-radius:8px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:15px;
+  width:36px;height:36px;border-radius:9px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:16px;
 }
-.ico-c{background:var(--cyanD);border:1px solid rgba(34,232,240,.22)}
-.ico-v{background:var(--vioD);border:1px solid rgba(168,85,247,.22)}
-.ch-ttl{font-size:12.5px;font-weight:700;letter-spacing:.055em;text-transform:uppercase;color:var(--t1)}
+.ico-c{background:var(--cyanD);border:1px solid rgba(34,232,240,.25)}
+.ico-v{background:var(--vioD);border:1px solid rgba(168,85,247,.25)}
+.ch-ttl{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t1)}
 .ch-sub{font-size:11px;color:var(--t2);margin-top:1px}
 .pulse-bar{
   height:2px;background:linear-gradient(90deg,var(--cyan),var(--vio) 60%,transparent);
-  border-radius:99px;margin:14px 0 20px;
-  animation:pba 3s ease infinite alternate;
+  border-radius:2px;margin:12px 0 20px;
 }
-@keyframes pba{from{opacity:.35}to{opacity:.85}}
 
-/* ── FORM ────────────────────────────────────────────── */
+/* ── TEXTAREA WRAP ───────────────────────────────────── */
+.textarea-wrap{position:relative;margin-bottom:16px}
 .flbl{
-  display:block;font-family:var(--fm);font-size:8.5px;
-  letter-spacing:.2em;text-transform:uppercase;color:var(--t2);margin-bottom:7px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:var(--fm);font-size:9.5px;color:var(--cyan);
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;
 }
-.textarea-wrap{position:relative;margin-bottom:14px}
+.flbl-right{display:flex;align-items:center;gap:8px}
+.flbl-btn{
+  background:transparent;border:none;color:var(--t2);cursor:pointer;
+  font-family:var(--fm);font-size:9px;letter-spacing:.08em;transition:color .2s;
+}
+.flbl-btn:hover{color:var(--cyan)}
 textarea#pd{
-  width:100%;min-height:130px;resize:none;
-  background:rgba(5,5,14,.65);border:1px solid rgba(255,255,255,.07);
-  border-radius:var(--r12);color:var(--t0);font-family:var(--ff);font-size:13.5px;
-  line-height:1.7;padding:13px 15px 28px;outline:none;caret-color:var(--cyan);
+  width:100%;height:140px;padding:14px 16px;background:rgba(5,7,14,0.7);
+  border:1px solid rgba(34,232,240,.2);border-radius:var(--r12);
+  color:var(--t0);font-family:var(--ff);font-size:13.5px;line-height:1.6;
+  resize:vertical;outline:none;transition:border-color .22s,box-shadow .22s;
+}
+textarea#pd:focus{
+  border-color:var(--cyan);
+  box-shadow:0 0 16px rgba(34,232,240,.2),inset 0 0 12px rgba(34,232,240,.04);
+}
+.cc{
+  position:absolute;bottom:10px;right:14px;
+  font-family:var(--fm);font-size:9.5px;color:var(--t2);pointer-events:none;
+}
+
+/* Keywords Live Bar */
+.kw-bar{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-height:22px;
+  margin-top:-8px;margin-bottom:14px;
+}
+.kw-tag{
+  font-family:var(--fm);font-size:8px;letter-spacing:.08em;
+  padding:2px 7px;border-radius:4px;background:rgba(34,232,240,.1);
+  border:1px solid rgba(34,232,240,.25);color:var(--cyan);text-transform:uppercase;
+  animation:popIn .2s ease forwards;
+}
+@keyframes popIn{from{opacity:0;transform:scale(0.85)}to{opacity:1;transform:none}}
+
+/* Age Row */
+.age-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+.age-f{flex:1;max-width:200px}
+input#pa{
+  width:100%;height:38px;padding:0 14px;background:rgba(5,7,14,0.7);
+  border:1px solid rgba(34,232,240,.2);border-radius:var(--r8);
+  color:var(--t0);font-family:var(--fm);font-size:12.5px;outline:none;
   transition:border-color .22s,box-shadow .22s;
 }
-textarea#pd:focus{border-color:rgba(34,232,240,.42);box-shadow:0 0 0 3px rgba(34,232,240,.08),inset 0 0 24px rgba(34,232,240,.03)}
-textarea#pd::placeholder{color:var(--t3)}
-.cc{
-  position:absolute;bottom:9px;right:12px;
-  font-family:var(--fm);font-size:9px;color:var(--t2);pointer-events:none;
+input#pa:focus{border-color:var(--cyan);box-shadow:0 0 12px rgba(34,232,240,.2)}
+.hk{
+  font-family:var(--fm);font-size:9.5px;color:var(--t2);
+  display:flex;align-items:center;gap:4px;
 }
-.age-row{display:flex;align-items:flex-end;gap:10px;margin-bottom:18px}
-.age-f{flex:1}
-input#pa{
-  width:100%;background:rgba(5,5,14,.65);border:1px solid rgba(255,255,255,.07);
-  border-radius:var(--r8);color:var(--t0);font-family:var(--fm);font-size:13px;
-  padding:10px 13px;outline:none;caret-color:var(--cyan);transition:border-color .22s,box-shadow .22s;
-}
-input#pa:focus{border-color:rgba(34,232,240,.42);box-shadow:0 0 0 3px rgba(34,232,240,.08)}
-input#pa::placeholder{color:var(--t3)}
-.hk{font-family:var(--fm);font-size:10px;color:var(--t2);white-space:nowrap;padding-bottom:10px}
 kbd{
-  display:inline-block;padding:1px 5px;border:1px solid var(--t3);
-  border-radius:3px;font-size:8.5px;color:var(--t2);
+  padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);font-size:9px;color:var(--t1);
 }
 
-/* ── PILLS ───────────────────────────────────────────── */
-.pills-lbl{font-family:var(--fm);font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--t2);margin-bottom:9px}
-.pills{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:20px}
+/* Quick Scenarios */
+.pills-lbl{
+  font-family:var(--fm);font-size:9px;letter-spacing:.14em;
+  color:var(--t2);text-transform:uppercase;margin-bottom:10px;
+}
+.pills{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px}
 .pill{
-  padding:9px 11px;border-radius:var(--r8);
-  background:rgba(255,255,255,.028);border:1px solid rgba(255,255,255,.06);
-  color:var(--t1);font-size:11px;font-weight:500;cursor:none;
-  display:flex;align-items:center;gap:7px;
-  transition:border-color .18s,background .18s,color .18s,transform .14s;
-  position:relative;overflow:hidden;user-select:none;text-align:left;
+  background:rgba(12,16,32,0.6);border:1px solid rgba(255,255,255,.07);
+  border-radius:var(--r12);padding:10px 12px;text-align:left;cursor:pointer;
+  transition:all .22s cubic-bezier(.16,1,.3,1);display:flex;align-items:center;gap:10px;
 }
-.pill::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(circle at var(--px,50%) var(--py,50%),rgba(34,232,240,.08) 0%,transparent 65%);
-  opacity:0;transition:opacity .18s;
+.pill:hover{
+  background:rgba(34,232,240,.08);border-color:rgba(34,232,240,.35);
+  transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,0.4);
 }
-.pill:hover{border-color:rgba(34,232,240,.28);color:var(--t0)}
-.pill:hover::before{opacity:1}
-.pill:active{transform:scale(.97)}
-.pe{font-size:13px;flex-shrink:0}
-.pt{font-size:10.5px;line-height:1.3}
+.pe{font-size:18px;line-height:1}
+.pt{font-size:11px;font-weight:600;color:var(--t0);line-height:1.3}
+.pt small{display:block;font-size:8.5px;color:var(--t2);font-family:var(--fm);text-transform:uppercase}
 
-/* ── CTA BUTTON ──────────────────────────────────────── */
-.div-line{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.06),transparent);margin:18px 0}
+.div-line{height:1px;background:rgba(255,255,255,.06);margin-bottom:20px}
+
+/* CTA */
 .cta{
-  width:100%;padding:14px 20px;border:none;border-radius:var(--r12);cursor:none;
-  background:linear-gradient(135deg,rgba(34,232,240,.16),rgba(168,85,247,.16));
-  border:1px solid rgba(34,232,240,.38);color:var(--cyan);
-  font-family:var(--fm);font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
-  display:flex;align-items:center;justify-content:center;gap:9px;position:relative;overflow:hidden;
-  transition:border-color .22s,box-shadow .22s,transform .14s;
-  box-shadow:0 0 18px rgba(34,232,240,.12),inset 0 0 28px rgba(34,232,240,.03);
+  width:100%;height:48px;border:none;border-radius:var(--r12);cursor:pointer;
+  background:linear-gradient(135deg,rgba(34,232,240,.24),rgba(168,85,247,.24));
+  border:1.5px solid var(--cyan);color:#fff;
+  font-family:var(--fm);font-size:12.5px;font-weight:800;letter-spacing:.15em;
+  text-transform:uppercase;transition:all .22s cubic-bezier(.16,1,.3,1);
+  box-shadow:0 0 20px rgba(34,232,240,.25),inset 0 0 20px rgba(34,232,240,.08);
+  display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;
 }
-.cta::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(34,232,240,.1),rgba(168,85,247,.1));
-  opacity:0;transition:opacity .22s;
-}
-.cta:hover:not(:disabled){
-  border-color:rgba(34,232,240,.62);
-  box-shadow:0 0 30px rgba(34,232,240,.28),0 0 60px rgba(34,232,240,.09),inset 0 0 28px rgba(34,232,240,.05);
+.cta:hover{
+  border-color:#fff;box-shadow:0 0 32px rgba(34,232,240,.45),0 0 60px rgba(168,85,247,.2);
   transform:translateY(-2px);
 }
-.cta:hover::before{opacity:1}
-.cta:active:not(:disabled){transform:translateY(1px) scale(.99)}
-.cta:disabled{opacity:.42;cursor:not-allowed}
-.cta .bc{display:flex;align-items:center;gap:9px;position:relative;z-index:1}
-.cta .sc{display:none;align-items:center;gap:9px;position:relative;z-index:1}
+.cta:active{transform:translateY(1px) scale(.98)}
+.cta .sc{display:none;align-items:center;gap:8px}
 .cta.ld .bc{display:none}
 .cta.ld .sc{display:flex}
 .spin{
-  width:16px;height:16px;border-radius:50%;
-  border:2px solid rgba(34,232,240,.2);border-top-color:var(--cyan);
-  animation:sp .65s linear infinite;box-shadow:0 0 6px rgba(34,232,240,.3);
+  width:16px;height:16px;border:2px solid rgba(255,255,255,.2);
+  border-top-color:#fff;border-radius:50%;animation:bspin .8s linear infinite;
 }
-@keyframes sp{to{transform:rotate(360deg)}}
 
-/* ── OUTPUT CARD ─────────────────────────────────────── */
-.out-card{min-height:500px;display:flex;flex-direction:column}
-.out-inner{flex:1;display:flex;flex-direction:column}
+/* ── RIGHT OUTPUT PANEL ──────────────────────────────── */
+.out-card{min-height:560px}
+.out-inner{display:flex;flex-direction:column;min-height:560px}
+.st-idle,.st-load,.st-chat,.st-res{flex:1;display:flex;flex-direction:column}
+.st-idle{align-items:center;justify-content:center;text-align:center;padding:40px 20px}
+.st-load{align-items:center;justify-content:center;text-align:center;display:none;padding:40px 20px}
+.st-chat,.st-res{display:none}
 
-/* IDLE */
-.st-idle{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:44px 20px;text-align:center}
-.radar-wrap{position:relative;width:110px;height:110px;margin-bottom:28px}
-.rr{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(34,232,240,.13);animation:rpulse 3s ease infinite}
-.rr:nth-child(2){inset:14px;animation-delay:.9s}
-.rr:nth-child(3){inset:28px;animation-delay:1.8s}
+.radar-wrap{
+  width:100px;height:100px;position:relative;margin:0 auto 24px;
+  display:flex;align-items:center;justify-content:center;
+}
+.rr{
+  position:absolute;inset:0;border-radius:50%;border:1px dashed rgba(34,232,240,.25);
+  animation:rpulse 3s cubic-bezier(.215,.61,.355,1) infinite;
+}
+.rr:nth-child(2){inset:16px;animation-delay:1s}
+.rr:nth-child(3){inset:32px;animation-delay:2s}
+@keyframes rpulse{0%{transform:scale(0.8);opacity:0.8}100%{transform:scale(1.2);opacity:0}}
 .rsweep{
   position:absolute;inset:0;border-radius:50%;
-  background:conic-gradient(from 0deg,transparent 0deg,rgba(34,232,240,.11) 22deg,transparent 65deg);
-  animation:rrot 4s linear infinite;
+  background:conic-gradient(from 0deg,transparent 60%,rgba(34,232,240,.18) 100%);
+  animation:bspin 2s linear infinite;
 }
 .rcore{
-  position:absolute;inset:38px;border-radius:50%;
-  background:radial-gradient(circle,rgba(34,232,240,.18) 0%,transparent 70%);
-  border:1px solid rgba(34,232,240,.28);
-  display:flex;align-items:center;justify-content:center;font-size:20px;
+  position:absolute;inset:32px;border-radius:50%;background:rgba(34,232,240,.1);
+  border:1px solid var(--cyan);display:flex;align-items:center;justify-content:center;
+  font-size:20px;color:var(--cyan);text-shadow:0 0 10px var(--cyan);
 }
-@keyframes rpulse{0%,100%{opacity:.12;transform:scale(1)}50%{opacity:.48;transform:scale(1.04)}}
-@keyframes rrot{to{transform:rotate(360deg)}}
-.idle-ttl{font-family:var(--fm);font-size:11.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--t1);margin-bottom:7px}
-.idle-sub{font-size:12.5px;color:var(--t2);line-height:1.65;max-width:260px}
+.idle-ttl{font-family:var(--fm);font-size:13px;font-weight:700;letter-spacing:.1em;color:var(--t1);margin-bottom:8px}
+.idle-sub{font-size:12px;color:var(--t2);max-width:320px;line-height:1.5}
 
-/* LOADING */
-.st-load{display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:44px 20px;text-align:center}
-.scan-bar{width:180px;height:3px;background:rgba(34,232,240,.09);border-radius:99px;overflow:hidden}
-.scan-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--vio));border-radius:99px;box-shadow:0 0 8px var(--cyan);animation:scan 1.35s ease-in-out infinite}
-@keyframes scan{0%{width:0%;margin-left:0}50%{width:55%;margin-left:45%}100%{width:0%;margin-left:100%}}
-.load-lbl{font-family:var(--fm);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan)}
+/* Loading */
+.load-lbl{font-family:var(--fm);font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--cyan);margin-bottom:16px}
+.scan-bar{width:220px;height:3px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;position:relative;margin-bottom:16px}
+.scan-fill{
+  height:100%;width:40%;background:linear-gradient(90deg,var(--cyan),var(--vio));
+  box-shadow:0 0 12px var(--cyan);animation:scanLoop 1.4s ease-in-out infinite alternate;
+}
+@keyframes scanLoop{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
 
-/* CHAT */
-.st-chat{display:none;flex-direction:column;flex:1}
+/* Chat Follow-Up */
 .chat-log{
-  flex:1;overflow-y:auto;padding:4px 0 14px;
-  display:flex;flex-direction:column;gap:11px;max-height:310px;scroll-behavior:smooth;
+  flex:1;max-height:360px;overflow-y:auto;padding-right:8px;margin-bottom:16px;
+  display:flex;flex-direction:column;gap:12px;
 }
-.chat-log::-webkit-scrollbar{width:3px}
-.chat-log::-webkit-scrollbar-thumb{background:rgba(255,255,255,.07);border-radius:99px}
-.cmsg{display:flex;gap:9px;animation:msgin .28s ease}
-@keyframes msgin{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
-.cav{
-  width:27px;height:27px;border-radius:50%;flex-shrink:0;margin-top:2px;
-  display:flex;align-items:center;justify-content:center;font-size:12px;
-}
-.cav.ai{background:linear-gradient(135deg,rgba(34,232,240,.2),rgba(168,85,247,.2));border:1px solid rgba(34,232,240,.28)}
-.cav.usr{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09)}
-.cbub{
-  max-width:90%;padding:9px 13px;border-radius:11px 11px 11px 2px;
-  font-size:12.5px;line-height:1.65;color:var(--t0);
-  background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);
-}
+.cmsg{display:flex;gap:10px;align-items:flex-start}
 .cmsg.um{flex-direction:row-reverse}
-.cmsg.um .cbub{border-radius:11px 11px 2px 11px;background:rgba(34,232,240,.065);border-color:rgba(34,232,240,.14);color:#bfdbfe}
-.tdots{display:flex;gap:4px;padding:8px 13px}
-.td{width:5px;height:5px;border-radius:50%;background:var(--cyan);animation:tdb 1.2s infinite}
+.cav{
+  width:28px;height:28px;border-radius:6px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:13px;
+}
+.cav.ai{background:var(--cyanD);border:1px solid rgba(34,232,240,.3);color:var(--cyan)}
+.cav.usr{background:var(--vioD);border:1px solid rgba(168,85,247,.3);color:var(--vio)}
+.cbub{
+  max-width:82%;padding:12px 16px;border-radius:var(--r12);
+  font-size:12.5px;line-height:1.5;background:rgba(15,20,38,0.8);
+  border:1px solid rgba(255,255,255,.07);color:var(--t0);
+}
+.cmsg.um .cbub{background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.25)}
+.tdots{display:flex;gap:4px;padding:4px}
+.td{width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:tdot 1s infinite alternate}
 .td:nth-child(2){animation-delay:.2s}
 .td:nth-child(3){animation-delay:.4s}
-@keyframes tdb{0%,80%,100%{opacity:.28;transform:scale(.7)}40%{opacity:1;transform:scale(1)}}
-.ci-row{display:flex;gap:7px;margin-top:11px}
+@keyframes tdot{from{opacity:0.2;transform:scale(0.8)}to{opacity:1;transform:scale(1.2)}}
+
+.ci-row{display:flex;gap:8px;margin-bottom:12px}
 input#fi{
-  flex:1;background:rgba(5,5,14,.65);border:1px solid rgba(255,255,255,.07);
-  border-radius:var(--r8);color:var(--t0);font-family:var(--ff);font-size:12.5px;
-  padding:10px 13px;outline:none;caret-color:var(--cyan);transition:border-color .2s,box-shadow .2s;
+  flex:1;height:42px;padding:0 14px;background:rgba(5,7,14,0.7);
+  border:1px solid rgba(34,232,240,.2);border-radius:var(--r8);
+  color:var(--t0);font-family:var(--ff);font-size:12.5px;outline:none;
 }
-input#fi:focus{border-color:rgba(34,232,240,.38);box-shadow:0 0 0 2px rgba(34,232,240,.06)}
-input#fi::placeholder{color:var(--t3)}
-input#fi:disabled{opacity:.38}
+input#fi:focus{border-color:var(--cyan)}
 .sb{
-  width:40px;height:40px;flex-shrink:0;border:none;border-radius:var(--r8);cursor:none;
-  background:linear-gradient(135deg,rgba(34,232,240,.18),rgba(168,85,247,.18));
-  border:1px solid rgba(34,232,240,.3);color:var(--cyan);
-  display:flex;align-items:center;justify-content:center;font-size:16px;
-  transition:box-shadow .18s,transform .14s;
+  width:42px;height:42px;border:none;border-radius:var(--r8);cursor:pointer;
+  background:var(--cyan);color:#050508;font-size:14px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;
 }
-.sb:hover:not(:disabled){box-shadow:0 0 16px rgba(34,232,240,.4);transform:scale(1.07)}
-.sb:disabled{opacity:.3;cursor:not-allowed}
-.ca-row{display:flex;gap:7px;margin-top:8px}
+.sb:hover:not(:disabled){transform:scale(1.05);box-shadow:0 0 16px var(--cyan)}
+.ca-row{display:flex;gap:10px}
 .gbtn{
-  flex:1;padding:8px 11px;border-radius:var(--r8);border:1px solid rgba(255,255,255,.07);
-  background:transparent;color:var(--t1);font-family:var(--fm);font-size:8.5px;
-  letter-spacing:.1em;text-transform:uppercase;cursor:none;
-  display:flex;align-items:center;justify-content:center;gap:5px;transition:border-color .18s,color .18s;
+  flex:1;height:38px;border-radius:var(--r8);background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);color:var(--t1);font-family:var(--fm);
+  font-size:11px;font-weight:600;letter-spacing:.08em;cursor:pointer;transition:all .2s;
 }
-.gbtn:hover:not(:disabled){border-color:rgba(255,255,255,.14);color:var(--t0)}
-.gbtn:disabled{opacity:.32;cursor:not-allowed}
+.gbtn:hover:not(:disabled){background:rgba(255,255,255,.09);color:#fff;border-color:var(--cyan)}
 
-/* RESULT */
-.st-res{display:none;flex-direction:column;gap:14px}
-
-/* Urgency banner */
+/* Result View */
 .ub{
-  border-radius:var(--r12);padding:15px 18px;
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
-  border:1px solid;position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:16px 20px;border-radius:var(--r12);margin-bottom:16px;
+  position:relative;overflow:hidden;
 }
-.ub::before{content:'';position:absolute;inset:0;opacity:.07}
-.ub-l{display:flex;align-items:center;gap:12px;position:relative;z-index:1}
-.upd{width:11px;height:11px;border-radius:50%;flex-shrink:0;animation:updp 1.5s ease infinite}
-@keyframes updp{0%,100%{box-shadow:0 0 0 0 currentColor}50%{box-shadow:0 0 0 5px rgba(0,0,0,0)}}
-.ulbl{font-family:var(--fm);font-size:8.5px;letter-spacing:.28em;text-transform:uppercase;opacity:.65}
-.uname{font-size:19px;font-weight:800;letter-spacing:-.01em;line-height:1.1;margin-top:2px}
-.udept{font-family:var(--fm);font-size:9.5px;opacity:.6;letter-spacing:.04em;margin-top:2px}
+.ub-l{display:flex;align-items:center;gap:14px}
+.upd{width:12px;height:12px;border-radius:50%;box-shadow:0 0 10px currentColor;flex-shrink:0}
+.ulbl{font-family:var(--fm);font-size:8.5px;letter-spacing:.14em;opacity:0.8;text-transform:uppercase}
+.uname{font-family:var(--fm);font-size:18px;font-weight:800;letter-spacing:.08em}
+.udept{font-size:12px;opacity:0.9;margin-top:2px}
 .urule{
-  font-family:var(--fm);font-size:10.5px;font-weight:700;
-  padding:5px 13px;border-radius:5px;border:1px solid currentColor;
-  background:rgba(0,0,0,.28);letter-spacing:.1em;position:relative;z-index:1;white-space:nowrap;
+  font-family:var(--fm);font-size:12px;font-weight:800;padding:6px 12px;border-radius:6px;
+  background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.2);cursor:pointer;
 }
-/* colour themes */
-.ui{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.4);color:var(--red)}
-.ui::before{background:var(--red)}
-.uu{background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.4);color:var(--amb)}
-.uu::before{background:var(--amb)}
-.us{background:rgba(34,197,94,.07);border-color:rgba(34,197,94,.3);color:var(--grn)}
-.us::before{background:var(--grn)}
-.ue{background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.4);color:var(--vio)}
-.ue::before{background:var(--vio)}
-.un{background:rgba(113,113,122,.08);border-color:rgba(113,113,122,.3);color:var(--zinc)}
-.un::before{background:var(--zinc)}
+.urule:hover{transform:scale(1.05);border-color:var(--cyan)}
 
-/* Escalation alert */
+.ub.ui{background:linear-gradient(135deg,rgba(239,68,68,.25),rgba(239,68,68,.08));border:1px solid var(--red);color:#fca5a5}
+.ub.ui .upd{background:var(--red);color:var(--red);animation:spulse 1s infinite}
+.ub.uu{background:linear-gradient(135deg,rgba(245,158,11,.25),rgba(245,158,11,.08));border:1px solid var(--amb);color:#fde68a}
+.ub.uu .upd{background:var(--amb);color:var(--amb)}
+.ub.us{background:linear-gradient(135deg,rgba(34,197,94,.25),rgba(34,197,94,.08));border:1px solid var(--grn);color:#86efac}
+.ub.us .upd{background:var(--grn);color:var(--grn)}
+.ub.ue{background:linear-gradient(135deg,rgba(168,85,247,.25),rgba(168,85,247,.08));border:1px solid var(--vio);color:#d8b4fe}
+.ub.ue .upd{background:var(--vio);color:var(--vio);animation:spulse 1.5s infinite}
+.ub.un{background:linear-gradient(135deg,rgba(113,113,122,.25),rgba(113,113,122,.08));border:1px solid var(--zinc);color:#cbd5e1}
+.ub.un .upd{background:var(--zinc);color:var(--zinc)}
+
 .eal{
-  background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.3);
-  border-radius:var(--r12);padding:13px 16px;
-  display:flex;gap:11px;align-items:flex-start;
-  animation:ealglow 2s ease infinite alternate;
-}
-@keyframes ealglow{from{box-shadow:none}to{box-shadow:0 0 18px rgba(239,68,68,.13)}}
-.eal-ico{font-size:17px;flex-shrink:0}
-.eal-txt{font-size:12.5px;color:#fca5a5;line-height:1.65}
-.eal-txt strong{color:var(--red)}
-
-/* Metric chips */
-.mchips{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.mc{
-  background:rgba(255,255,255,.024);border:1px solid rgba(255,255,255,.055);
-  border-radius:var(--r12);padding:13px 15px;
-}
-.mc-lbl{font-family:var(--fm);font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--t2);margin-bottom:5px}
-.mc-val{font-size:13.5px;font-weight:600;color:var(--t0);line-height:1.3}
-.mc-val.mono{
-  font-family:var(--fm);font-weight:700;font-size:15px;
-  background:linear-gradient(90deg,var(--cyan),var(--vio));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:var(--r8);
+  background:rgba(239,68,68,.12);border:1px solid var(--red);color:#fca5a5;
+  font-size:11.5px;line-height:1.4;margin-bottom:16px;
 }
 
-/* Info panels */
-.ip{margin-top:2px}
-.ip-hdr{display:flex;align-items:center;gap:7px;margin-bottom:9px}
-.ipdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.ip-lbl{font-family:var(--fm);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--t2)}
-.ibox{
-  background:rgba(255,255,255,.022);border:1px solid rgba(255,255,255,.05);
-  border-radius:var(--r12);padding:13px 15px;
-}
-.itxt{font-size:12.5px;color:var(--t1);line-height:1.75}
-.ilst{list-style:none;display:flex;flex-direction:column;gap:6px}
-.ilst li{display:flex;gap:9px;font-size:12.5px;color:var(--t1);line-height:1.5;align-items:flex-start}
-.ilst li::before{content:'▸';flex-shrink:0;margin-top:1px}
-.ilst.c .ilst li::before,.ilst.c li::before{color:var(--cyan)}
+.mchips{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.mc{background:rgba(5,7,14,0.6);border:1px solid rgba(255,255,255,.06);border-radius:var(--r8);padding:10px 14px}
+.mc-lbl{font-family:var(--fm);font-size:8px;color:var(--t2);letter-spacing:.12em;text-transform:uppercase}
+.mc-val{font-size:12.5px;font-weight:700;color:var(--t0);margin-top:2px}
+.mc-val.mono{font-family:var(--fm);color:var(--cyan)}
+
+.ip{margin-bottom:14px}
+.ip-hdr{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.ipdot{width:6px;height:6px;border-radius:50%}
+.ip-lbl{font-family:var(--fm);font-size:8.5px;font-weight:700;letter-spacing:.12em;color:var(--t1);text-transform:uppercase}
+.ibox{background:rgba(5,7,14,0.6);border:1px solid rgba(255,255,255,.06);border-radius:var(--r8);padding:12px 14px}
+.itxt{font-size:12px;line-height:1.6;color:var(--t0)}
+
+.fcols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ilst{list-style:none;padding:0;margin:0;font-size:11px;color:var(--t1);line-height:1.6}
+.ilst li{position:relative;padding-left:14px}
+.ilst li::before{content:'•';position:absolute;left:0;color:var(--cyan)}
 .ilst.v li::before{color:var(--vio)}
 .ilst.a li::before{color:var(--amb)}
 
-/* Findings cols */
-.fcols{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-@media(max-width:560px){.fcols{grid-template-columns:1fr}}
-
-/* JSON drawer */
-.jd{border:1px solid rgba(255,255,255,.05);border-radius:var(--r12);overflow:hidden}
+/* JSON Drawer */
+.jd{border:1px solid rgba(255,255,255,.08);border-radius:var(--r8);margin-top:14px;overflow:hidden}
 .jd-hdr{
+  padding:10px 14px;background:rgba(255,255,255,.02);cursor:pointer;
   display:flex;align-items:center;justify-content:space-between;
-  padding:9px 15px;background:rgba(255,255,255,.022);
-  cursor:none;user-select:none;transition:background .18s;
+  font-family:var(--fm);font-size:9.5px;color:var(--t2);letter-spacing:.1em;
 }
-.jd-hdr:hover{background:rgba(255,255,255,.04)}
-.jd-ttl{font-family:var(--fm);font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--t2)}
-.jd-chev{color:var(--t2);transition:transform .28s ease;font-size:12px}
-.jd.open .jd-chev{transform:rotate(180deg)}
-.jd-body{
-  display:none;padding:14px 16px;background:rgba(5,5,10,.82);
-  border-top:1px solid rgba(255,255,255,.04);
-  max-height:260px;overflow-y:auto;
-}
+.jd-hdr:hover{color:var(--cyan);background:rgba(34,232,240,.04)}
+.jd-body{display:none;padding:12px 14px;background:rgba(2,3,6,0.9);max-height:220px;overflow-y:auto}
 .jd.open .jd-body{display:block}
-.jd-body::-webkit-scrollbar{width:3px}
-.jd-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.07);border-radius:99px}
-pre.jc{font-family:var(--fm);font-size:10.5px;line-height:1.7;color:var(--t1);white-space:pre-wrap;word-break:break-all}
-.jk{color:var(--cyan)}
-.js{color:#a3e635}
-.jn{color:var(--amb)}
-.jb{color:#fb7185}
-.jnull{color:var(--t2)}
+.jd.open .jd-chev{transform:rotate(180deg)}
+.jd-chev{transition:transform .2s}
+pre.jc{font-family:var(--fm);font-size:10px;line-height:1.5;color:var(--t1)}
+.jk{color:var(--cyan)} .js{color:#86efac} .jn{color:#fde68a} .jb{color:#f472b6}
 
-/* Quick actions */
-.qa{display:flex;gap:7px}
+/* Quick Actions */
+.qa{display:flex;gap:10px;margin-top:18px}
 .ab{
-  flex:1;padding:9px 12px;border-radius:var(--r8);
-  border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);
-  color:var(--t1);font-family:var(--fm);font-size:8.5px;
-  letter-spacing:.12em;text-transform:uppercase;cursor:none;
-  display:flex;align-items:center;justify-content:center;gap:5px;
-  transition:border-color .18s,color .18s,transform .12s;
+  flex:1;height:38px;border-radius:var(--r8);background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);color:var(--t0);font-family:var(--fm);
+  font-size:11px;font-weight:600;letter-spacing:.08em;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:6px;
 }
-.ab:hover{border-color:rgba(34,232,240,.25);color:var(--cyan)}
-.ab.rb:hover{border-color:rgba(168,85,247,.25);color:var(--vio)}
-.ab:active{transform:scale(.98)}
+.ab:hover{background:rgba(34,232,240,.12);border-color:var(--cyan);color:var(--cyan)}
+.ab.rb:hover{background:rgba(239,68,68,.12);border-color:var(--red);color:#fca5a5}
 
-/* ── RULES TABLE ─────────────────────────────────────── */
-.rules-sec{max-width:1380px;margin:0 auto;width:100%;padding:0 28px 44px}
-@media(max-width:860px){.rules-sec{padding:0 16px 40px}}
-.rules-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.rules-ttl{font-family:var(--fm);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--t2)}
+/* ── GROUNDED RULES SECTION ───────────────────────────── */
+.rules-sec{max-width:1440px;margin:0 auto 60px;padding:0 28px;width:100%}
+.rules-hdr{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  flex-wrap:wrap;margin-bottom:16px;
+}
+.rules-ttl-wrap{display:flex;align-items:center;gap:10px}
+.rules-ttl{font-family:var(--fm);font-size:13px;font-weight:800;letter-spacing:.12em;color:var(--t0);text-transform:uppercase}
 .rc-badge{
-  font-family:var(--fm);font-size:8px;padding:3px 8px;border-radius:4px;
-  background:var(--vioD);border:1px solid rgba(168,85,247,.2);color:var(--vio);
+  font-family:var(--fm);font-size:9px;padding:4px 10px;border-radius:12px;
+  background:var(--vioD);border:1px solid var(--vioB);color:var(--vio);
 }
+.rules-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+input#r-search{
+  height:34px;padding:0 12px;background:rgba(5,7,14,0.7);
+  border:1px solid rgba(255,255,255,.1);border-radius:6px;
+  color:var(--t0);font-family:var(--fm);font-size:11px;outline:none;width:180px;
+}
+input#r-search:focus{border-color:var(--cyan)}
+.r-filters{display:flex;gap:4px}
+.rf-btn{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:4px;padding:4px 8px;font-family:var(--fm);font-size:8.5px;
+  color:var(--t2);cursor:pointer;transition:all .18s;text-transform:uppercase;
+}
+.rf-btn.active,.rf-btn:hover{background:rgba(34,232,240,.12);border-color:var(--cyan);color:var(--cyan)}
+
 .rtw{overflow-x:auto}
-.rt{width:100%;border-collapse:collapse;font-size:11.5px}
-.rt th{
-  text-align:left;padding:9px 13px;background:rgba(255,255,255,.022);
-  font-family:var(--fm);font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--t2);border-bottom:1px solid rgba(255,255,255,.055);
+table.rt{width:100%;border-collapse:collapse;font-size:11.5px;text-align:left}
+table.rt th{
+  padding:12px 14px;font-family:var(--fm);font-size:8.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--t2);border-bottom:1px solid rgba(255,255,255,.08);
 }
-.rt td{padding:10px 13px;border-bottom:1px solid rgba(255,255,255,.035);color:var(--t1)}
-.rt tr:hover td{background:rgba(255,255,255,.018)}
-.rt tr:last-child td{border-bottom:none}
+table.rt td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.03);color:var(--t1)}
+table.rt tr:hover td{background:rgba(34,232,240,.02);color:var(--t0)}
 .rip{
-  font-family:var(--fm);font-size:9.5px;font-weight:700;
-  padding:2px 8px;border-radius:4px;
-  background:rgba(34,232,240,.07);border:1px solid rgba(34,232,240,.18);
-  color:var(--cyan);display:inline-block;letter-spacing:.04em;
+  font-family:var(--fm);font-weight:700;padding:3px 7px;border-radius:4px;
+  background:rgba(255,255,255,.06);color:var(--cyan);font-size:10px;
 }
 .up{
-  display:inline-block;padding:2px 9px;border-radius:20px;
-  font-family:var(--fm);font-size:8.5px;font-weight:700;letter-spacing:.07em;
+  display:inline-block;padding:3px 9px;border-radius:12px;
+  font-family:var(--fm);font-size:8.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
 }
-.up.IMMEDIATE{background:var(--redD);color:#fca5a5}
-.up.URGENT{background:var(--ambD);color:#fde68a}
-.up.STANDARD{background:var(--grnD);color:#86efac}
-.up.ESCALATE{background:var(--vioD);color:#d8b4fe}
-.up.NOT_MEDICAL{background:var(--zincD);color:#a1a1aa}
+.up.IMMEDIATE{background:var(--redD);color:#fca5a5;border:1px solid rgba(239,68,68,.3)}
+.up.URGENT{background:var(--ambD);color:#fde68a;border:1px solid rgba(245,158,11,.3)}
+.up.STANDARD{background:var(--grnD);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+.up.ESCALATE{background:var(--vioD);color:#d8b4fe;border:1px solid rgba(168,85,247,.3)}
+.up.NOT_MEDICAL{background:var(--zincD);color:#cbd5e1;border:1px solid rgba(113,113,122,.3)}
 
 /* ── FOOTER ──────────────────────────────────────────── */
 footer{
-  text-align:center;padding:16px 28px 28px;
+  text-align:center;padding:24px 28px 36px;
   border-top:1px solid rgba(255,255,255,.04);
-  font-family:var(--fm);font-size:8px;letter-spacing:.14em;
+  font-family:var(--fm);font-size:8.5px;letter-spacing:.14em;
   color:var(--t2);text-transform:uppercase;
 }
 
 /* ── TOAST ───────────────────────────────────────────── */
 #toast{
-  position:fixed;bottom:20px;right:20px;z-index:99999;
-  background:rgba(8,9,15,.96);border:1px solid rgba(34,232,240,.3);
-  border-radius:var(--r8);padding:10px 16px;
-  font-family:var(--fm);font-size:10.5px;letter-spacing:.09em;
-  color:var(--cyan);box-shadow:0 0 18px rgba(34,232,240,.2);
-  transform:translateY(18px);opacity:0;transition:all .28s cubic-bezier(.34,1.56,.64,1);
+  position:fixed;bottom:24px;right:24px;z-index:99999;
+  background:rgba(8,11,20,.95);border:1px solid var(--cyan);
+  border-radius:var(--r8);padding:12px 20px;
+  font-family:var(--fm);font-size:11px;letter-spacing:.08em;
+  color:var(--cyan);box-shadow:0 0 24px rgba(34,232,240,.3);
+  transform:translateY(24px);opacity:0;transition:all .28s cubic-bezier(.34,1.56,.64,1);
   pointer-events:none;
 }
 #toast.show{transform:none;opacity:1}
 
-/* ── LANDING SCREEN ──────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════
+   ELEVATED CYBER-CLINICAL LANDING SCREEN
+═══════════════════════════════════════════════════════ */
 #landing{
   position:fixed;inset:0;z-index:9990;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   background:var(--obs);
   transition:opacity .5s ease, transform .5s ease;
+  overflow-y:auto;padding:24px 16px;
 }
-#landing.out{opacity:0;transform:scale(1.05);pointer-events:none}
+#landing.out{opacity:0;transform:scale(1.04);pointer-events:none}
+
+.l-frame{
+  position:relative;width:100%;max-width:1160px;margin:auto;
+  display:flex;flex-direction:column;align-items:center;padding:36px 20px;
+}
+.l-hud-corner{
+  position:absolute;width:18px;height:18px;pointer-events:none;opacity:0.4;
+}
+.l-hud-corner.tl{top:0;left:0;border-top:2px solid var(--cyan);border-left:2px solid var(--cyan)}
+.l-hud-corner.tr{top:0;right:0;border-top:2px solid var(--cyan);border-right:2px solid var(--cyan)}
+.l-hud-corner.bl{bottom:0;left:0;border-bottom:2px solid var(--cyan);border-left:2px solid var(--cyan)}
+.l-hud-corner.br{bottom:0;right:0;border-bottom:2px solid var(--cyan);border-right:2px solid var(--cyan)}
+
+/* Holographic Medical Core */
+.l-core{
+  position:relative;width:110px;height:110px;margin-bottom:22px;
+  display:flex;align-items:center;justify-content:center;
+}
+.l-ring-outer{
+  position:absolute;inset:0;border-radius:50%;
+  border:1.5px dashed rgba(34,232,240,0.45);
+  animation:lrot 24s linear infinite;
+}
+.l-ring-inner{
+  position:absolute;inset:12px;border-radius:50%;
+  border:2px solid transparent;border-top-color:var(--cyan);border-bottom-color:var(--vio);
+  animation:lrotRev 9s linear infinite;
+}
+.l-core-ico{
+  font-size:42px;color:var(--cyan);
+  text-shadow:0 0 24px var(--cyan), 0 0 50px rgba(34,232,240,0.6);
+  animation:lpulse 2.8s ease-in-out infinite;z-index:2;
+}
+@keyframes lrot{to{transform:rotate(360deg)}}
+@keyframes lrotRev{to{transform:rotate(-360deg)}}
+@keyframes lpulse{
+  0%,100%{transform:scale(1);opacity:0.95}
+  50%{transform:scale(1.1);opacity:1;text-shadow:0 0 32px var(--cyan),0 0 70px rgba(168,85,247,0.7)}
+}
+
+/* Ticker & Hero Headings */
+.l-ticker{
+  display:inline-flex;align-items:center;gap:8px;padding:6px 14px;
+  background:rgba(34,232,240,0.08);border:1px solid rgba(34,232,240,0.25);
+  border-radius:30px;font-family:var(--fm);font-size:9.5px;color:var(--cyan);
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;
+  box-shadow:0 0 16px rgba(34,232,240,0.1);
+}
+.l-beacon{
+  width:7px;height:7px;border-radius:50%;background:#22c55e;
+  box-shadow:0 0 8px #22c55e;animation:spulse 1.8s infinite;
+}
+
 .l-hero{
-  font-family:var(--fm);font-size:36px;font-weight:800;letter-spacing:.1em;
-  background:linear-gradient(90deg,var(--cyan),var(--vio));
+  font-family:var(--fm);font-size:clamp(30px, 4.8vw, 52px);font-weight:900;
+  letter-spacing:.14em;
+  background:linear-gradient(135deg,#ffffff 0%,var(--cyan) 45%,var(--vio) 85%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  margin-bottom:12px;text-align:center;
+  margin-bottom:10px;text-align:center;
+  text-shadow:0 0 40px rgba(34,232,240,0.25);
 }
-.l-sub{font-size:16px;color:var(--t1);margin-bottom:24px;text-align:center;font-weight:300}
-.l-badge{
-  font-family:var(--fm);font-size:10px;padding:6px 12px;border-radius:6px;
-  background:var(--vioD);border:1px solid rgba(168,85,247,.2);color:var(--vio);
-  letter-spacing:.1em;margin-bottom:40px;font-weight:700;
+.l-sub{
+  font-size:clamp(14px, 1.8vw, 17px);color:var(--t0);
+  margin-bottom:6px;text-align:center;font-weight:500;letter-spacing:.02em;
 }
-.l-specs{font-family:var(--fm);font-size:9px;color:var(--t2);margin-top:50px;text-transform:uppercase;letter-spacing:.1em;text-align:center}
+.l-desc{
+  font-size:12.5px;color:var(--t1);margin-bottom:24px;text-align:center;
+  max-width:680px;line-height:1.6;
+}
 
-.l-cta{
-  padding:18px 36px;border:none;border-radius:var(--r12);cursor:none;
-  background:linear-gradient(135deg,rgba(34,232,240,.16),rgba(168,85,247,.16));
-  border:1px solid rgba(34,232,240,.38);color:var(--cyan);
-  font-family:var(--fm);font-size:14px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
-  transition:border-color .22s,box-shadow .22s,transform .14s;
-  box-shadow:0 0 18px rgba(34,232,240,.12),inset 0 0 28px rgba(34,232,240,.03);
-  position:relative;overflow:hidden;
+/* Live Vitals Telemetry Bar */
+.l-vitals-bar{
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  width:100%;max-width:860px;padding:12px 22px;background:rgba(10,14,28,0.75);
+  border:1px solid rgba(34,232,240,0.22);border-radius:var(--r12);margin-bottom:28px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.45),inset 0 0 20px rgba(34,232,240,0.03);
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
 }
-.l-cta::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(34,232,240,.1),rgba(168,85,247,.1));
-  opacity:0;transition:opacity .22s;
+.l-ecg-wrap{display:flex;align-items:center;gap:12px;flex:1}
+.l-ecg-badge{
+  font-family:var(--fm);font-size:8.5px;color:var(--cyan);
+  background:rgba(34,232,240,0.12);padding:3px 8px;border-radius:4px;
+  letter-spacing:.1em;white-space:nowrap;
 }
-.l-cta:hover{
-  border-color:rgba(34,232,240,.62);
-  box-shadow:0 0 30px rgba(34,232,240,.28),0 0 60px rgba(34,232,240,.09),inset 0 0 28px rgba(34,232,240,.05);
-  transform:translateY(-2px);
-}
-.l-cta:hover::before{opacity:1}
-.l-cta:active{transform:translateY(1px) scale(.98)}
+canvas#l-ecg{height:32px;width:180px;border-radius:4px}
+.l-vital-group{display:flex;align-items:center;gap:18px}
+.l-vital-item{display:flex;flex-direction:column;align-items:center;font-family:var(--fm)}
+.l-vital-val{font-size:12px;font-weight:700;color:var(--cyan);letter-spacing:.04em}
+.l-vital-lbl{font-size:8px;color:var(--t2);letter-spacing:.1em;text-transform:uppercase}
+@media(max-width:768px){.l-vitals-bar{flex-direction:column;gap:12px}.l-vital-group{flex-wrap:wrap;justify-content:center}}
 
-.boot-seq{display:none;flex-direction:column;align-items:center;justify-content:center;width:100%;max-width:400px}
+/* 4 Capability Cards */
+.l-grid{
+  display:grid;grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));gap:16px;
+  width:100%;max-width:1040px;margin-bottom:32px;
+}
+.l-card{
+  background:rgba(12,16,32,0.65);border:1px solid rgba(255,255,255,0.08);
+  border-radius:var(--r16);padding:20px;transition:all .3s cubic-bezier(.16,1,.3,1);
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  display:flex;flex-direction:column;text-align:left;position:relative;overflow:hidden;
+}
+.l-card:hover{
+  transform:translateY(-4px);border-color:rgba(34,232,240,0.4);
+  box-shadow:0 12px 32px rgba(0,0,0,0.6),0 0 24px rgba(34,232,240,0.12);
+}
+.l-card-tag{
+  font-family:var(--fm);font-size:8px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:8px;display:flex;align-items:center;gap:6px;
+}
+.l-card-ttl{font-size:14px;font-weight:700;color:var(--t0);margin-bottom:6px}
+.l-card-desc{font-size:11.5px;color:var(--t1);line-height:1.5}
+
+/* Action Hub */
+.l-actions{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  flex-wrap:wrap;margin-bottom:24px;width:100%;
+}
+.l-cta-main{
+  padding:16px 36px;border-radius:var(--r12);
+  background:linear-gradient(135deg,rgba(34,232,240,.24),rgba(168,85,247,.24));
+  border:1.5px solid var(--cyan);color:#fff;
+  font-family:var(--fm);font-size:13.5px;font-weight:800;letter-spacing:.18em;
+  text-transform:uppercase;cursor:pointer;
+  box-shadow:0 0 24px rgba(34,232,240,.3),inset 0 0 20px rgba(34,232,240,.1);
+  transition:all .25s cubic-bezier(.16,1,.3,1);display:inline-flex;align-items:center;gap:10px;
+}
+.l-cta-main:hover{
+  transform:translateY(-2px) scale(1.02);
+  box-shadow:0 0 42px rgba(34,232,240,.55),0 0 80px rgba(168,85,247,.25);
+  border-color:#fff;
+}
+.l-cta-main:active{transform:translateY(1px) scale(.98)}
+.l-cta-sec{
+  padding:15px 22px;border-radius:var(--r12);background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.14);color:var(--t1);font-family:var(--fm);
+  font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  cursor:pointer;transition:all .22s ease;display:inline-flex;align-items:center;gap:8px;
+}
+.l-cta-sec:hover{
+  background:rgba(34,232,240,.08);border-color:var(--cyan);color:var(--cyan);
+  box-shadow:0 0 20px rgba(34,232,240,.2);
+}
+
+.l-specs{
+  font-family:var(--fm);font-size:9px;color:var(--t2);
+  text-transform:uppercase;letter-spacing:.12em;text-align:center;
+}
+
+/* Boot Sequence */
+.boot-seq{
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  width:100%;max-width:440px;margin:auto;
+}
 .b-radar{
-  width:120px;height:120px;border-radius:50%;
-  border:1px dashed rgba(34,232,240,.3);
-  margin-bottom:30px;position:relative;
+  width:130px;height:130px;border-radius:50%;
+  border:1px dashed rgba(34,232,240,.4);margin-bottom:24px;position:relative;
   display:flex;align-items:center;justify-content:center;
 }
 .b-radar::after{
@@ -564,13 +675,71 @@ footer{
   border:2px solid transparent;border-top-color:var(--cyan);border-bottom-color:var(--vio);
   animation:bspin 1s linear infinite;
 }
-@keyframes bspin{to{transform:rotate(360deg)}}
-.b-logs{font-family:var(--fm);font-size:10px;color:var(--cyan);line-height:1.8;height:75px;overflow:hidden;width:100%;text-align:left;opacity:0.8;display:flex;flex-direction:column;justify-content:flex-end;}
+.b-logs{
+  font-family:var(--fm);font-size:10.5px;color:var(--cyan);line-height:1.9;
+  height:95px;overflow:hidden;width:100%;text-align:left;opacity:0.85;
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
 .b-log-row{animation:lfade .2s ease forwards;opacity:0}
-@keyframes lfade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
-.b-prog{width:100%;height:3px;background:rgba(255,255,255,.05);border-radius:3px;margin-top:20px;overflow:hidden;position:relative}
-.b-prog-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--vio));box-shadow:0 0 8px var(--cyan);transition:width 0.1s linear}
-{% endraw %}</style>
+.b-prog{
+  width:100%;height:4px;background:rgba(255,255,255,.07);border-radius:4px;
+  margin-top:20px;overflow:hidden;position:relative;
+}
+.b-prog-fill{
+  height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--vio));
+  box-shadow:0 0 10px var(--cyan);transition:width .1s linear;
+}
+.b-prog-txt{
+  display:flex;align-items:center;justify-content:space-between;width:100%;
+  font-family:var(--fm);font-size:9.5px;color:var(--t2);margin-top:8px;
+}
+.b-skip{
+  margin-top:20px;background:transparent;border:1px solid rgba(255,255,255,.15);
+  border-radius:6px;color:var(--t2);font-family:var(--fm);font-size:9.5px;
+  letter-spacing:.1em;padding:6px 14px;cursor:pointer;transition:all .2s;
+}
+.b-skip:hover{color:var(--cyan);border-color:var(--cyan)}
+
+/* ── PRINTABLE TRIAGE SLIP MODAL ─────────────────────── */
+.slip-modal-bg{
+  position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.slip-modal-bg.active{display:flex}
+.slip-card{
+  width:100%;max-width:520px;background:#ffffff;color:#0f172a;
+  border-radius:12px;padding:28px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.7);
+  font-family:system-ui,-apple-system,sans-serif;position:relative;
+}
+.slip-hdr{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  border-bottom:2px solid #0f172a;padding-bottom:12px;margin-bottom:16px;
+}
+.slip-h-ttl{font-size:18px;font-weight:900;letter-spacing:-.02em;text-transform:uppercase}
+.slip-h-sub{font-size:10px;color:#64748b;font-family:var(--fm);margin-top:2px}
+.slip-badge{
+  font-size:11px;font-weight:800;padding:4px 8px;border-radius:4px;
+  color:#fff;background:#0f172a;font-family:var(--fm);text-transform:uppercase;
+}
+.slip-sec{margin-bottom:12px}
+.slip-lbl{font-size:9px;font-weight:800;color:#64748b;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+.slip-val{font-size:13px;font-weight:600;color:#0f172a;line-height:1.4}
+.slip-val.mono{font-family:var(--fm);font-size:12px}
+.slip-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 12px;margin-bottom:12px}
+.slip-barcode{
+  font-family:var(--fm);font-size:14px;letter-spacing:.3em;text-align:center;
+  padding:10px 0;background:#f1f5f9;border-radius:4px;margin-top:16px;font-weight:900;
+}
+.slip-btns{display:flex;gap:10px;margin-top:20px}
+.slip-btn{
+  flex:1;padding:10px;border-radius:6px;font-size:12px;font-weight:700;
+  cursor:pointer;border:none;transition:opacity .2s;
+}
+.slip-btn.print{background:#0f172a;color:#fff}
+.slip-btn.close{background:#e2e8f0;color:#334155}
+.slip-btn:hover{opacity:0.9}
+</style>
 </head>
 <body>
 <!-- Custom cursor -->
@@ -580,34 +749,135 @@ footer{
 <!-- Toast -->
 <div id="toast"></div>
 
-<!-- ═══ LANDING SCREEN ════════════════════════════════ -->
+<!-- ═══ ELEVATED CYBER-CLINICAL LANDING SCREEN ═════════ -->
 <div id="landing">
-  <div id="l-main" style="display:flex;flex-direction:column;align-items:center;">
-    <div class="l-hero">NEXUS // TRIAGE-OS</div>
+  <div class="l-frame" id="l-main">
+    <!-- Corner HUD brackets -->
+    <div class="l-hud-corner tl"></div>
+    <div class="l-hud-corner tr"></div>
+    <div class="l-hud-corner bl"></div>
+    <div class="l-hud-corner br"></div>
+
+    <!-- Holographic Medical Core -->
+    <div class="l-core">
+      <div class="l-ring-outer"></div>
+      <div class="l-ring-inner"></div>
+      <div class="l-core-ico">⚕</div>
+    </div>
+
+    <!-- Status Ticker -->
+    <div class="l-ticker">
+      <div class="l-beacon"></div>
+      <span>PROTOCOL ACTIVE // ZERO-DIAGNOSIS GUARDRAILS // PS01 GCC EDITION</span>
+    </div>
+
+    <!-- Hero Titles -->
+    <h1 class="l-hero">NEXUS // TRIAGE-OS</h1>
     <div class="l-sub">Autonomous Patient Intake &amp; Grounded Clinical Routing Engine</div>
-    <div class="l-badge">TRACK_ID=PS01 • IIIT-H / GCC EDITION</div>
-    <button class="l-cta" id="btn-init" data-label="Initialize">INITIALIZE SYSTEM / START INTAKE</button>
-    <div class="l-specs">Powered by Gemini 1.5 / 3.5-Flash-Lite | Zero-Diagnosis Guardrails | Local Deterministic Rules</div>
+    <p class="l-desc">Hospital walk-in triage assistant powered by Gemini 3.5 Flash Lite and local deterministic rules. Strictly routes patients to appropriate departments without diagnosing or medical hallucination.</p>
+
+    <!-- Live Biometric Waveform & Vitals Bar -->
+    <div class="l-vitals-bar">
+      <div class="l-ecg-wrap">
+        <span class="l-ecg-badge">LIVE ECG</span>
+        <canvas id="l-ecg" width="180" height="32"></canvas>
+      </div>
+      <div class="l-vital-group">
+        <div class="l-vital-item">
+          <div class="l-vital-val" id="v-hr">72 BPM</div>
+          <div class="l-vital-lbl">SINUS RHYTHM</div>
+        </div>
+        <div class="l-vital-item">
+          <div class="l-vital-val">99%</div>
+          <div class="l-vital-lbl">SPO2 PULSE</div>
+        </div>
+        <div class="l-vital-item">
+          <div class="l-vital-val">16 /MIN</div>
+          <div class="l-vital-lbl">RESP RATE</div>
+        </div>
+        <div class="l-vital-item">
+          <div class="l-vital-val">28 MS</div>
+          <div class="l-vital-lbl">LATENCY</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 Cyber-Glass Capability Pillars -->
+    <div class="l-grid">
+      <div class="l-card">
+        <div class="l-card-tag">🛡️ SAFETY PROTOCOL</div>
+        <div class="l-card-ttl">Zero-Diagnosis Guardrails</div>
+        <div class="l-card-desc">Strictly limited to clinical routing. Never offers medical diagnoses, treatments, or speculative clinical statements.</div>
+      </div>
+      <div class="l-card">
+        <div class="l-card-tag">⚡ LOCAL DETERMINISTIC</div>
+        <div class="l-card-ttl">12 Grounded Protocols</div>
+        <div class="l-card-desc">Every triage recommendation cites exact Rule IDs (R01–R12) for auditable walk-in healthcare routing.</div>
+      </div>
+      <div class="l-card">
+        <div class="l-card-tag">🚨 SENTINEL GATEWAY</div>
+        <div class="l-card-ttl">Human Escalation Sentinel</div>
+        <div class="l-card-desc">Autonomous fail-safe tripwire triggers Rule R11 to immediately escalate ambiguous or critical presentations.</div>
+      </div>
+      <div class="l-card">
+        <div class="l-card-tag">📋 TELEMETRY &amp; AUDIT</div>
+        <div class="l-card-ttl">Clinical Intake Dossier</div>
+        <div class="l-card-desc">Generates structured JSON telemetry, segregates reported vs established evidence, and produces printable triage slips.</div>
+      </div>
+    </div>
+
+    <!-- Action Hub -->
+    <div class="l-actions">
+      <button class="l-cta-main" id="btn-init" data-label="Initialize">
+        <span>⚡ INITIALIZE SYSTEM / START INTAKE</span>
+      </button>
+      <button class="l-cta-sec" id="btn-demo" data-label="Emergency">
+        <span>🚨 EMERGENCY PRESET DEMO</span>
+      </button>
+      <button class="l-cta-sec" id="btn-rules-jump" data-label="Rules">
+        <span>📖 BROWSE RULES MATRIX</span>
+      </button>
+      <button class="l-cta-sec" id="btn-sound-toggle" data-label="Audio">
+        <span id="snd-label">🔊 AUDIO: ON</span>
+      </button>
+    </div>
+
+    <div class="l-specs">Powered by Gemini 3.5 Flash Lite &amp; Local Grounded Rules · Zero-Diagnosis Policy · IIIT-H / GCC Edition</div>
   </div>
-  
+
+  <!-- Boot Sequence Screen -->
   <div id="l-boot" class="boot-seq">
-    <div class="b-radar"><div style="font-size:24px;color:var(--cyan)">⚕</div></div>
+    <div class="b-radar">
+      <div style="font-size:32px;color:var(--cyan)">⚕</div>
+    </div>
     <div class="b-logs" id="b-logs"></div>
-    <div class="b-prog"><div class="b-prog-fill" id="b-prog-fill"></div></div>
+    <div class="b-prog">
+      <div class="b-prog-fill" id="b-prog-fill"></div>
+    </div>
+    <div class="b-prog-txt">
+      <span id="b-status-txt">INITIALIZING SYSTEM MODULES...</span>
+      <span id="b-pct-txt">0%</span>
+    </div>
+    <button class="b-skip" id="btn-skip-boot">SKIP BOOT ⏩</button>
   </div>
 </div>
 
+<!-- ═══ MAIN APP SHELL ═════════════════════════════════ -->
 <div class="shell" id="app-shell" style="display:none;opacity:0;transition:opacity 0.5s ease">
 <!-- ═══ NAV ════════════════════════════════════════════ -->
 <nav>
-  <div class="brand">
+  <div class="brand" onclick="location.reload()" data-label="Home">
     <div class="brand-ico">⚕</div>
     <div>
       <div class="brand-name">NEXUS // TRIAGE-OS</div>
       <div class="brand-sub">Patient Intake Intelligence · PS01</div>
     </div>
   </div>
-  <div class="nav-mid"><div class="sdot"></div>AI GROUNDING ENGINE ONLINE</div>
+  <div class="nav-mid">
+    <div class="nav-status"><div class="sdot"></div>GROUNDING ENGINE ONLINE</div>
+    <button class="nav-btn" onclick="scrollToRules()" data-label="Rules">Rules Matrix</button>
+    <button class="nav-btn" onclick="loadScenario(0)" data-label="Emergency">Chest Pain Demo</button>
+  </div>
   <div class="nav-r">
     <div class="disc-badge">⚠ NOT A DIAGNOSTIC TOOL · CLINICAL ROUTING ONLY</div>
     <div class="tid-badge">TRACK_ID=PS01</div>
@@ -622,47 +892,58 @@ footer{
     <div class="glare"></div>
     <div class="ci">
       <div class="ch-row">
-        <div class="ch-ico ico-c">🖥</div>
-        <div>
-          <div class="ch-ttl">Intake Terminal</div>
-          <div class="ch-sub">Patient plain-language complaint stream</div>
+        <div class="ch-left">
+          <div class="ch-ico ico-c">🖥</div>
+          <div>
+            <div class="ch-ttl">Intake Terminal</div>
+            <div class="ch-sub">Patient plain-language complaint stream</div>
+          </div>
         </div>
+        <button class="flbl-btn" onclick="dictateSpeech()" id="btn-dictate" title="Dictate with voice" data-label="Mic">🎙️ Dictate</button>
       </div>
       <div class="pulse-bar"></div>
 
       <!-- Textarea -->
       <div class="textarea-wrap">
-        <label class="flbl" for="pd">PATIENT COMPLAINT INPUT</label>
+        <div class="flbl">
+          <span>PATIENT COMPLAINT INPUT</span>
+          <div class="flbl-right">
+            <button class="flbl-btn" onclick="clearInput()" data-label="Clear">✕ Clear</button>
+          </div>
+        </div>
         <textarea id="pd" maxlength="2000"
-          placeholder="Describe symptoms in plain language…&#10;e.g. I have crushing chest pain starting 20 mins ago…"
+          placeholder="Describe symptoms in plain language…&#10;e.g. I have crushing chest pain starting 20 mins ago radiating to my left arm…"
           aria-label="Patient symptom description"></textarea>
         <span class="cc" id="cc">0 / 2000</span>
       </div>
+
+      <!-- Real-time detected clinical keyword tags -->
+      <div class="kw-bar" id="kw-bar"></div>
 
       <!-- Age + hotkey -->
       <div class="age-row">
         <div class="age-f">
           <label class="flbl" for="pa">PATIENT AGE (OPTIONAL)</label>
-          <input type="text" id="pa" placeholder="e.g. 45" maxlength="3" aria-label="Patient age"/>
+          <input type="text" id="pa" placeholder="e.g. 54" maxlength="3" aria-label="Patient age"/>
         </div>
-        <div class="hk"><kbd>Ctrl</kbd>&thinsp;+&thinsp;<kbd>↵</kbd></div>
+        <div class="hk"><kbd>Ctrl</kbd>&thinsp;+&thinsp;<kbd>↵</kbd>&nbsp; to triage</div>
       </div>
 
-      <!-- Pills -->
+      <!-- Quick Pills -->
       <div class="pills-lbl">⚡ QUICK-LOAD SCENARIOS</div>
       <div class="pills">
-        <button class="pill" data-label="Triage"
+        <button class="pill" data-label="Emergency"
           data-s="I have crushing chest pain in the centre of my chest that started about 20 minutes ago. The pain spreads to my left arm and jaw. I am sweating heavily and feel nauseous. I am 54 years old with a history of high blood pressure."
-          data-a="54"><span class="pe">🚨</span><span class="pt">Emergency<br>Chest Pain</span></button>
-        <button class="pill" data-label="Analyze"
+          data-a="54"><span class="pe">🚨</span><span class="pt">Emergency<small>Rule R05 · Chest Pain</small></span></button>
+        <button class="pill" data-label="Routine"
           data-s="I have had a mild fever of about 38 degrees since yesterday. I feel tired and have a slight headache but no rash or neck stiffness. I have been drinking plenty of fluids."
-          data-a="32"><span class="pe">🌡</span><span class="pt">Routine<br>Mild Fever</span></button>
-        <button class="pill" data-label="Triage"
+          data-a="32"><span class="pe">🌡</span><span class="pt">Routine<small>Rule R02 · Mild Fever</small></span></button>
+        <button class="pill" data-label="Ambiguous"
           data-s="I have stomach pain that has been getting worse over the past few hours. I am not sure exactly where it hurts, sometimes the right side, sometimes all over. I feel a bit nauseous but have not vomited."
-          data-a="28"><span class="pe">❓</span><span class="pt">Ambiguous<br>Abdominal Pain</span></button>
-        <button class="pill" data-label="Route"
+          data-a="28"><span class="pe">❓</span><span class="pt">Ambiguous<small>Rule R11 · Clarification</small></span></button>
+        <button class="pill" data-label="Admin"
           data-s="I need to collect my prescription paperwork and get a copy of my blood test results from last month. I also have a question about my insurance billing statement."
-          data-a=""><span class="pe">🚫</span><span class="pt">Administrative<br>Null Case</span></button>
+          data-a=""><span class="pe">🚫</span><span class="pt">Administrative<small>Rule R12 · Non-Medical</small></span></button>
       </div>
 
       <div class="div-line"></div>
@@ -671,8 +952,8 @@ footer{
         <div class="bc">⚡ EXECUTE GROUNDED TRIAGE</div>
         <div class="sc"><div class="spin"></div>EVALUATING AGAINST RULES…</div>
       </button>
-      <div style="text-align:center;margin-top:10px;font-family:var(--fm);font-size:9px;color:var(--t2)">
-        gemini-3.5-flash-lite · 12 rules · grounded · no diagnosis
+      <div style="text-align:center;margin-top:10px;font-family:var(--fm);font-size:9.5px;color:var(--t2)">
+        gemini-3.5-flash-lite · 12 rules loaded · grounded · zero diagnosis
       </div>
     </div>
   </div>
@@ -685,10 +966,12 @@ footer{
       <!-- IDLE -->
       <div class="st-idle" id="s-idle" style="display:flex">
         <div class="ch-row" style="align-self:flex-start;margin-bottom:0;width:100%">
-          <div class="ch-ico ico-v">📡</div>
-          <div>
-            <div class="ch-ttl">Triage Telemetry Dossier</div>
-            <div class="ch-sub">Grounded AI routing output — no diagnosis</div>
+          <div class="ch-left">
+            <div class="ch-ico ico-v">📡</div>
+            <div>
+              <div class="ch-ttl">Triage Telemetry Dossier</div>
+              <div class="ch-sub">Grounded AI routing output — zero diagnosis</div>
+            </div>
           </div>
         </div>
         <div class="pulse-bar" style="align-self:stretch"></div>
@@ -698,7 +981,7 @@ footer{
           <div class="rcore">⚕</div>
         </div>
         <div class="idle-ttl">AWAITING PATIENT INTAKE STREAM</div>
-        <div class="idle-sub">Submit a patient complaint above to begin grounded triage evaluation.</div>
+        <div class="idle-sub">Submit a patient complaint above or click a quick-load scenario to begin grounded triage evaluation.</div>
       </div>
 
       <!-- LOADING -->
@@ -710,16 +993,18 @@ footer{
         </div>
         <div class="load-lbl">EVALUATING AGAINST GROUNDED RULES…</div>
         <div class="scan-bar"><div class="scan-fill"></div></div>
-        <div style="font-family:var(--fm);font-size:9px;color:var(--t2)">gemini-3.5-flash-lite · 12 rules loaded</div>
+        <div style="font-family:var(--fm);font-size:9.5px;color:var(--t2)">gemini-3.5-flash-lite · 12 rules loaded</div>
       </div>
 
-      <!-- CHAT -->
+      <!-- CHAT FOLLOW-UP -->
       <div class="st-chat" id="s-chat">
         <div class="ch-row" style="margin-bottom:10px">
-          <div class="ch-ico ico-v">💬</div>
-          <div>
-            <div class="ch-ttl">Follow-up Protocol</div>
-            <div class="ch-sub">Clarification required for safe routing</div>
+          <div class="ch-left">
+            <div class="ch-ico ico-v">💬</div>
+            <div>
+              <div class="ch-ttl">Follow-up Protocol</div>
+              <div class="ch-sub">Clarification required for safe routing</div>
+            </div>
           </div>
         </div>
         <div class="pulse-bar"></div>
@@ -730,7 +1015,7 @@ footer{
           <button class="sb" id="sbtn" onclick="sendFU()" disabled data-label="Send">➤</button>
         </div>
         <div class="ca-row">
-          <button class="gbtn" id="finbtn" onclick="finalise()" disabled data-label="Generate">📋 Generate Note</button>
+          <button class="gbtn" id="finbtn" onclick="finalise()" disabled data-label="Generate">📋 Force Final Note</button>
           <button class="gbtn" onclick="resetAll()" data-label="Reset">🔄 Reset Session</button>
         </div>
       </div>
@@ -748,14 +1033,14 @@ footer{
               <div class="udept" id="udept">—</div>
             </div>
           </div>
-          <div class="urule" id="urule">—</div>
+          <div class="urule" id="urule" onclick="jumpToCitedRule()" title="Click to view rule details in rules matrix">—</div>
         </div>
 
         <!-- Escalation alert -->
         <div class="eal" id="eal" style="display:none">
-          <div class="eal-ico">🔴</div>
+          <div class="eal-ico" style="font-size:20px">🔴</div>
           <div class="eal-txt">
-            <strong>HUMAN ESCALATION REQUIRED</strong><br/>
+            <strong>HUMAN ESCALATION MANDATED (RULE R11)</strong><br/>
             <span id="eal-rsn"></span>
           </div>
         </div>
@@ -774,7 +1059,7 @@ footer{
 
         <!-- Reasoning -->
         <div class="ip">
-          <div class="ip-hdr"><div class="ipdot" style="background:var(--cyan)"></div><div class="ip-lbl">CLINICAL REASONING & RULE JUSTIFICATION</div></div>
+          <div class="ip-hdr"><div class="ipdot" style="background:var(--cyan)"></div><div class="ip-lbl">CLINICAL REASONING &amp; RULE JUSTIFICATION</div></div>
           <div class="ibox"><div class="itxt" id="i-rsn">—</div></div>
         </div>
 
@@ -785,21 +1070,21 @@ footer{
             <div class="ibox"><ul class="ilst v" id="i-rep"></ul></div>
           </div>
           <div class="ip">
-            <div class="ip-hdr"><div class="ipdot" style="background:var(--grn)"></div><div class="ip-lbl">✅ ESTABLISHED VIA FOLLOW-UP</div></div>
+            <div class="ip-hdr"><div class="ipdot" style="background:var(--grn)"></div><div class="ip-lbl">✅ ESTABLISHED EVIDENCE</div></div>
             <div class="ibox"><ul class="ilst" id="i-est"></ul></div>
           </div>
         </div>
 
         <!-- Unknowns -->
         <div class="ip">
-          <div class="ip-hdr"><div class="ipdot" style="background:var(--amb)"></div><div class="ip-lbl">❓ UNKNOWNS & FOLLOW-UP QUESTIONS</div></div>
+          <div class="ip-hdr"><div class="ipdot" style="background:var(--amb)"></div><div class="ip-lbl">❓ UNKNOWNS / MISSING METRICS</div></div>
           <div class="ibox"><ul class="ilst a" id="i-unk"></ul></div>
         </div>
 
         <!-- JSON drawer -->
         <div class="jd" id="jd">
           <div class="jd-hdr" onclick="toggleJD()" data-label="Inspect">
-            <div class="jd-ttl">⟨/⟩ RAW JSON INSPECTION DRAWER</div>
+            <div class="jd-ttl">⟨/⟩ RAW JSON TELEMETRY DOSSIER</div>
             <div class="jd-chev">▾</div>
           </div>
           <div class="jd-body"><pre class="jc" id="jcode"></pre></div>
@@ -807,8 +1092,9 @@ footer{
 
         <!-- Quick actions -->
         <div class="qa">
-          <button class="ab" onclick="copyNote()" data-label="Copy">📋 Copy Triage Note</button>
-          <button class="ab rb" onclick="resetAll()" data-label="Reset">🔄 Reset Session</button>
+          <button class="ab" onclick="openSlipModal()" data-label="Print">🖨️ Print Triage Slip</button>
+          <button class="ab" onclick="copyNote()" data-label="Copy">📋 Copy Note</button>
+          <button class="ab rb" onclick="resetAll()" data-label="Reset">🔄 Reset</button>
         </div>
 
       </div><!-- /result -->
@@ -818,21 +1104,33 @@ footer{
 </main>
 
 <!-- ═══ RULES TABLE ════════════════════════════════════ -->
-<section class="rules-sec">
+<section class="rules-sec" id="rules-matrix-section">
   <div class="card">
     <div class="ci">
       <div class="rules-hdr">
-        <span style="color:var(--vio);font-size:13px">🗄</span>
-        <span class="rules-ttl">GROUNDED RULES DATASET</span>
-        <span class="rc-badge" id="rc">Loading…</span>
+        <div class="rules-ttl-wrap">
+          <span style="color:var(--vio);font-size:16px">🗄</span>
+          <span class="rules-ttl">GROUNDED CLINICAL RULES DATASET</span>
+          <span class="rc-badge" id="rc">12 Rules</span>
+        </div>
+        <div class="rules-controls">
+          <input type="text" id="r-search" placeholder="Filter rules..." oninput="filterRules()"/>
+          <div class="r-filters">
+            <button class="rf-btn active" onclick="setRuleFilter('ALL')">ALL</button>
+            <button class="rf-btn" onclick="setRuleFilter('IMMEDIATE')">IMMEDIATE</button>
+            <button class="rf-btn" onclick="setRuleFilter('URGENT')">URGENT</button>
+            <button class="rf-btn" onclick="setRuleFilter('STANDARD')">STANDARD</button>
+            <button class="rf-btn" onclick="setRuleFilter('ESCALATE')">ESCALATE</button>
+          </div>
+        </div>
       </div>
       <div class="rtw">
         <table class="rt" aria-label="Triage rules reference">
           <thead>
-            <tr><th>Rule ID</th><th>Category</th><th>Label</th><th>Urgency</th><th>Department</th></tr>
+            <tr><th>Rule ID</th><th>Category</th><th>Label &amp; Trigger Conditions</th><th>Urgency</th><th>Department</th></tr>
           </thead>
           <tbody id="rtb">
-            <tr><td colspan="5" style="text-align:center;color:var(--t2);padding:20px">Loading…</td></tr>
+            <tr><td colspan="5" style="text-align:center;color:var(--t2);padding:24px">Loading clinical ruleset…</td></tr>
           </tbody>
         </table>
       </div>
@@ -840,10 +1138,45 @@ footer{
   </div>
 </section>
 
-<footer>NEXUS // TRIAGE-OS &nbsp;·&nbsp; TRACK_ID=PS01 &nbsp;·&nbsp; CLINICAL ROUTING ONLY — NOT A DIAGNOSTIC TOOL &nbsp;·&nbsp; gemini-3.5-flash-lite · Rules v1.0</footer>
+<footer>NEXUS // TRIAGE-OS &nbsp;·&nbsp; TRACK_ID=PS01 &nbsp;·&nbsp; CLINICAL ROUTING ONLY — NOT A DIAGNOSTIC TOOL &nbsp;·&nbsp; GEMINI 3.5 FLASH LITE · RULES V1.0</footer>
 </div><!-- /shell -->
 
-<script>{% raw %}
+<!-- ═══ PRINTABLE TRIAGE SLIP MODAL ════════════════════ -->
+<div class="slip-modal-bg" id="slip-modal" onclick="if(event.target===this)closeSlipModal()">
+  <div class="slip-card">
+    <div class="slip-hdr">
+      <div>
+        <div class="slip-h-ttl">NEXUS CLINICAL INTAKE SLIP</div>
+        <div class="slip-h-sub" id="slip-time">Walk-In Emergency Reception · PS01</div>
+      </div>
+      <div class="slip-badge" id="slip-tier-badge">URGENT</div>
+    </div>
+    <div class="slip-sec">
+      <div class="slip-lbl">RECOMMENDED ROUTING DEPARTMENT</div>
+      <div class="slip-val" id="slip-dept" style="font-size:15px;color:#0284c7">—</div>
+    </div>
+    <div class="slip-sec">
+      <div class="slip-lbl">GROUNDED CLINICAL RULE CITATION</div>
+      <div class="slip-val mono" id="slip-rule">—</div>
+    </div>
+    <div class="slip-box">
+      <div class="slip-lbl">CLINICAL JUSTIFICATION &amp; REASONING</div>
+      <div class="slip-val" id="slip-reasoning" style="font-size:11.5px">—</div>
+    </div>
+    <div class="slip-sec">
+      <div class="slip-lbl">PRESENTED PATIENT COMPLAINT</div>
+      <div class="slip-val" id="slip-complaint" style="font-size:11.5px;color:#475569">—</div>
+    </div>
+    <div class="slip-barcode" id="slip-barcode">||| ||||| || |||| ||| |||||</div>
+    <div style="font-size:8.5px;color:#94a3b8;text-align:center;margin-top:6px;font-family:var(--fm)">NOT A DIAGNOSIS · ROUTING &amp; DISPATCH PURPOSES ONLY</div>
+    <div class="slip-btns">
+      <button class="slip-btn print" onclick="window.print()">🖨️ Print Slip</button>
+      <button class="slip-btn close" onclick="closeSlipModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
 /* ═══════════════════════════════════════════════════════
    CANVAS BACKGROUND — radar grid + particles
 ═══════════════════════════════════════════════════════ */
@@ -859,35 +1192,36 @@ footer{
     constructor(){this.r()}
     r(){
       this.x=Math.random()*W;this.y=Math.random()*H;
-      this.vx=(Math.random()-.5)*.28;this.vy=(Math.random()-.5)*.28;
-      this.rad=Math.random()*1.6+.3;this.a=Math.random()*.45+.1;
-      this.hue=Math.random()>.5?187:276;
+      this.vx=(Math.random()-.5)*.35;this.vy=(Math.random()-.5)*.35;
+      this.sz=Math.random()*1.8+.6;this.a=Math.random()*.45+.15;
+      this.hue=Math.random()>0.5?183:275;
     }
     tick(){
       this.x+=this.vx;this.y+=this.vy;
       if(this.x<0||this.x>W||this.y<0||this.y>H)this.r();
     }
     draw(){
-      ctx.beginPath();ctx.arc(this.x,this.y,this.rad,0,Math.PI*2);
+      ctx.beginPath();ctx.arc(this.x,this.y,this.sz,0,Math.PI*2);
       ctx.fillStyle=`hsla(${this.hue},88%,68%,${this.a})`;ctx.fill();
     }
   }
-  const N=Math.min(70,Math.floor(W*H/14000));
-  for(let i=0;i<N;i++)pts.push(new P());
+  for(let i=0;i<55;i++)pts.push(new P());
 
   function drawGrid(){
-    const gs=80;
-    ctx.strokeStyle='rgba(34,232,240,0.028)';ctx.lineWidth=1;
-    for(let x=0;x<W;x+=gs){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}
-    for(let y=0;y<H;y+=gs){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+    ctx.save();ctx.strokeStyle='rgba(34,232,240,0.035)';ctx.lineWidth=0.5;
+    const sz=48;
+    for(let x=0;x<W;x+=sz){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(let y=0;y<H;y+=sz){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    ctx.restore();
   }
   function drawConns(){
     for(let i=0;i<pts.length;i++){
       for(let j=i+1;j<pts.length;j++){
-        const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
-        if(d<115){
+        const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<110){
           ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
-          ctx.strokeStyle=`rgba(34,232,240,${.055*(1-d/115)})`;ctx.lineWidth=.5;ctx.stroke();
+          ctx.strokeStyle=`rgba(34,232,240,${.05*(1-d/110)})`;ctx.lineWidth=.5;ctx.stroke();
         }
       }
     }
@@ -895,27 +1229,105 @@ footer{
   function drawAmb(){
     ax+=(mx-ax)*.042;ay+=(my-ay)*.042;
     if(ax<0)return;
-    const g=ctx.createRadialGradient(ax,ay,0,ax,ay,340);
-    g.addColorStop(0,'rgba(34,232,240,0.038)');g.addColorStop(.5,'rgba(168,85,247,0.018)');g.addColorStop(1,'transparent');
+    const g=ctx.createRadialGradient(ax,ay,0,ax,ay,360);
+    g.addColorStop(0,'rgba(34,232,240,0.045)');g.addColorStop(.5,'rgba(168,85,247,0.02)');g.addColorStop(1,'transparent');
     ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-  }
-  function drawWave(){
-    ctx.save();ctx.strokeStyle='rgba(34,232,240,0.055)';ctx.lineWidth=1;
-    ctx.beginPath();
-    for(let x=0;x<=W;x+=4){
-      const y=H*.62+Math.sin((x/W)*Math.PI*6+wt)*16+Math.sin((x/W)*Math.PI*11+wt*1.4)*7;
-      x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-    }
-    ctx.stroke();ctx.restore();wt+=.014;
   }
   function frame(){
     ctx.clearRect(0,0,W,H);
-    drawGrid();drawAmb();drawWave();
+    drawGrid();drawAmb();
     pts.forEach(p=>{p.tick();p.draw()});
     drawConns();requestAnimationFrame(frame);
   }
   frame();
 })();
+
+/* ═══════════════════════════════════════════════════════
+   LIVE ECG MONITOR ANIMATION
+═══════════════════════════════════════════════════════ */
+(function(){
+  const ecgCv=document.getElementById('l-ecg');
+  if(!ecgCv)return;
+  const ctx=ecgCv.getContext('2d');
+  let t=0,pts=[];
+  const W=ecgCv.width,H=ecgCv.height;
+  for(let x=0;x<W;x++)pts.push(H/2);
+
+  function getEcgY(time){
+    const cycle = time % 80;
+    const mid = H/2;
+    if(cycle > 20 && cycle < 26) return mid - 4; // P wave
+    if(cycle === 32) return mid + 3; // Q
+    if(cycle === 34) return mid - 14; // R peak
+    if(cycle === 36) return mid + 8; // S
+    if(cycle > 46 && cycle < 56) return mid - 5; // T wave
+    return mid + (Math.sin(time*0.1)*0.8);
+  }
+
+  function renderEcg(){
+    t++;
+    pts.shift();
+    pts.push(getEcgY(t));
+
+    ctx.clearRect(0,0,W,H);
+    ctx.beginPath();
+    ctx.strokeStyle='#22e8f0';
+    ctx.lineWidth=1.5;
+    ctx.shadowColor='#22e8f0';
+    ctx.shadowBlur=8;
+
+    for(let x=0;x<pts.length;x++){
+      if(x===0)ctx.moveTo(x,pts[x]);
+      else ctx.lineTo(x,pts[x]);
+    }
+    ctx.stroke();
+
+    // Leading glowing dot
+    ctx.beginPath();
+    ctx.arc(W-2,pts[pts.length-1],2.5,0,Math.PI*2);
+    ctx.fillStyle='#ffffff';
+    ctx.fill();
+
+    requestAnimationFrame(renderEcg);
+  }
+  renderEcg();
+})();
+
+/* ═══════════════════════════════════════════════════════
+   WEB AUDIO SYNTHESIZER (TACTILE SOUND FX)
+═══════════════════════════════════════════════════════ */
+let soundEnabled = true;
+let audioCtx = null;
+function getAudioContext(){
+  if(!audioCtx && (window.AudioContext || window.webkitAudioContext)){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  return audioCtx;
+}
+function playBeep(freq=840,type='sine',dur=0.06,gainVal=0.03){
+  if(!soundEnabled)return;
+  try{
+    const ac=getAudioContext();
+    if(!ac)return;
+    if(ac.state==='suspended')ac.resume();
+    const osc=ac.createOscillator();
+    const g=ac.createGain();
+    osc.type=type;
+    osc.frequency.setValueAtTime(freq,ac.currentTime);
+    g.gain.setValueAtTime(gainVal,ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001,ac.currentTime+dur);
+    osc.connect(g);g.connect(ac.destination);
+    osc.start();osc.stop(ac.currentTime+dur);
+  }catch(e){}
+}
+
+document.getElementById('btn-sound-toggle')?.addEventListener('click',()=>{
+  soundEnabled = !soundEnabled;
+  const lbl=document.getElementById('snd-label');
+  if(lbl)lbl.textContent = soundEnabled ? '🔊 AUDIO: ON' : '🔇 AUDIO: OFF';
+  toast(soundEnabled ? '✓ Sound effects enabled' : '✕ Sound effects muted');
+  if(soundEnabled)playBeep(920,'triangle',0.1);
+});
 
 /* ═══════════════════════════════════════════════════════
    CUSTOM CURSOR
@@ -927,13 +1339,13 @@ footer{
   let rx=-200,ry=-200,mx=-200,my=-200;
   addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
   (function anim(){
-    rx+=(mx-rx)*.11;ry+=(my-ry)*.11;
+    rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
     ring.style.cssText=`left:${rx}px;top:${ry}px`;
     dot.style.cssText=`left:${mx}px;top:${my}px`;
     lbl.style.cssText=`left:${rx}px;top:${ry+26}px`;
     requestAnimationFrame(anim);
   })();
-  document.querySelectorAll('button,.pill,input,textarea,.jd-hdr,.ab').forEach(el=>{
+  document.querySelectorAll('button,.pill,input,textarea,.jd-hdr,.ab,.urule,.brand').forEach(el=>{
     el.addEventListener('mouseenter',()=>{
       document.body.classList.add('ch');
       lbl.textContent=el.dataset.label||'';
@@ -942,6 +1354,7 @@ footer{
       document.body.classList.remove('ch');
       lbl.textContent='';
     });
+    el.addEventListener('click',()=>playBeep(640,'sine',0.04));
   });
 })();
 
@@ -956,12 +1369,10 @@ footer{
       const r=card.getBoundingClientRect();
       const dx=(e.clientX-r.left-r.width/2)/(r.width/2);
       const dy=(e.clientY-r.top-r.height/2)/(r.height/2);
-      card.style.transform=`perspective(1000px) rotateY(${dx*5}deg) rotateX(${-dy*5}deg) scale3d(1.012,1.012,1.012)`;
+      card.style.transform=`perspective(1000px) rotateY(${dx*4}deg) rotateX(${-dy*4}deg) scale3d(1.008,1.008,1.008)`;
       if(gl){
-        const gx=((e.clientX-r.left)/r.width*100).toFixed(1);
-        const gy=((e.clientY-r.top)/r.height*100).toFixed(1);
-        gl.style.setProperty('--gx',gx+'%');
-        gl.style.setProperty('--gy',gy+'%');
+        gl.style.setProperty('--gx',((e.clientX-r.left)/r.width*100).toFixed(1)+'%');
+        gl.style.setProperty('--gy',((e.clientY-r.top)/r.height*100).toFixed(1)+'%');
       }
     });
     card.addEventListener('mouseleave',()=>{card.style.transform=''});
@@ -969,32 +1380,103 @@ footer{
 })();
 
 /* ═══════════════════════════════════════════════════════
-   PILLS
+   PILLS & INPUTS
 ═══════════════════════════════════════════════════════ */
+function loadScenario(idx){
+  const pills=document.querySelectorAll('.pill');
+  if(pills[idx]){
+    pills[idx].click();
+  }
+}
+
 document.querySelectorAll('.pill').forEach(p=>{
-  p.addEventListener('mousemove',e=>{
-    const r=p.getBoundingClientRect();
-    p.style.setProperty('--px',((e.clientX-r.left)/r.width*100).toFixed(1)+'%');
-    p.style.setProperty('--py',((e.clientY-r.top)/r.height*100).toFixed(1)+'%');
-  });
   p.addEventListener('click',()=>{
     document.getElementById('pd').value=p.dataset.s||'';
     document.getElementById('pa').value=p.dataset.a||'';
     updateCC();
+    scanKeywords();
     flashEl('pd');
+    playBeep(780,'triangle',0.07);
   });
 });
 
-/* ═══════════════════════════════════════════════════════
-   CHAR COUNTER
-═══════════════════════════════════════════════════════ */
+function clearInput(){
+  document.getElementById('pd').value='';
+  document.getElementById('pa').value='';
+  updateCC();
+  scanKeywords();
+  flashEl('pd');
+}
+
 function updateCC(){
   const l=document.getElementById('pd').value.length;
   const cc=document.getElementById('cc');
   cc.textContent=`${l} / 2000`;
   cc.style.color=l>1800?'var(--amb)':'var(--t2)';
 }
-document.getElementById('pd').addEventListener('input',updateCC);
+document.getElementById('pd').addEventListener('input',()=>{
+  updateCC();
+  scanKeywords();
+});
+
+/* Clinical Keyword Tag Scanner */
+const KEYWORD_MAP=[
+  {word:'chest pain',tag:'🫀 Cardiac / Chest Pain'},
+  {word:'crushing',tag:'⚡ Crushing Pain'},
+  {word:'arm',tag:'⚡ Radiation to Arm'},
+  {word:'jaw',tag:'⚡ Radiation to Jaw'},
+  {word:'fever',tag:'🌡️ Fever'},
+  {word:'temperature',tag:'🌡️ Core Temp'},
+  {word:'breath',tag:'🫁 Dyspnea / Breath'},
+  {word:'wheez',tag:'🫁 Wheezing'},
+  {word:'stomach',tag:'🩸 Abdominal Pain'},
+  {word:'abdominal',tag:'🩸 Abdominal'},
+  {word:'bleed',tag:'🩸 Active Bleeding'},
+  {word:'wound',tag:'🩹 Trauma / Wound'},
+  {word:'fracture',tag:'🦴 Suspected Fracture'},
+  {word:'fall',tag:'⚠️ Mechanism: Fall'},
+  {word:'prescription',tag:'📋 Administrative'},
+  {word:'insurance',tag:'📋 Billing / Insurance'}
+];
+function scanKeywords(){
+  const txt=document.getElementById('pd').value.toLowerCase();
+  const kwBar=document.getElementById('kw-bar');
+  if(!kwBar)return;
+  const matched=[];
+  KEYWORD_MAP.forEach(k=>{
+    if(txt.includes(k.word)&&!matched.includes(k.tag)){
+      matched.push(k.tag);
+    }
+  });
+  kwBar.innerHTML=matched.map(m=>`<span class="kw-tag">${m}</span>`).join('');
+}
+
+/* Voice Dictation via Web Speech API */
+function dictateSpeech(){
+  if(!('webkitSpeechRecognition' in window)&&!('SpeechRecognition' in window)){
+    toast('⚠ Web Speech API not supported in this browser.');
+    return;
+  }
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const rec = new SpeechRec();
+  rec.lang = 'en-US';
+  rec.interimResults = false;
+  const btn = document.getElementById('btn-dictate');
+  btn.textContent = '🔴 Listening…';
+  playBeep(880,'sine',0.1);
+  rec.onresult = e => {
+    const transcript = e.results[0][0].transcript;
+    const pd = document.getElementById('pd');
+    pd.value = (pd.value ? pd.value + ' ' : '') + transcript;
+    updateCC();
+    scanKeywords();
+    flashEl('pd');
+    playBeep(1100,'sine',0.08);
+  };
+  rec.onerror = () => { toast('⚠ Voice input ended or cancelled.'); };
+  rec.onend = () => { btn.textContent = '🎙️ Dictate'; };
+  rec.start();
+}
 
 /* ═══════════════════════════════════════════════════════
    HOTKEY
@@ -1005,16 +1487,36 @@ document.addEventListener('keydown',e=>{
 document.getElementById('cta').addEventListener('click',executeTriage);
 
 /* ═══════════════════════════════════════════════════════
-   STATE
+   STATE & NAVIGATION
 ═══════════════════════════════════════════════════════ */
 let SID=null,HIST=[],LAST_NOTE=null;
+let ALL_RULES=[];
+let CURRENT_RULE_FILTER='ALL';
 
 function showState(s){
   ['idle','load','chat','res'].forEach(n=>{
     const el=document.getElementById('s-'+n);
     if(!el)return;
-    el.style.display=(s===n)?({idle:'flex',load:'flex',chat:'flex',res:'flex'}[n]):'none';
+    el.style.display=(s===n)?'flex':'none';
   });
+}
+
+function scrollToRules(){
+  document.getElementById('rules-matrix-section')?.scrollIntoView({behavior:'smooth'});
+}
+
+function jumpToCitedRule(){
+  if(!LAST_NOTE||!LAST_NOTE.cited_rule_id)return;
+  const rid=LAST_NOTE.cited_rule_id;
+  scrollToRules();
+  setTimeout(()=>{
+    const row=document.getElementById(`rule-row-${rid}`);
+    if(row){
+      row.style.background='rgba(34,232,240,0.18)';
+      row.scrollIntoView({behavior:'smooth',block:'center'});
+      setTimeout(()=>row.style.background='',2500);
+    }
+  },400);
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -1023,10 +1525,11 @@ function showState(s){
 async function executeTriage(){
   const complaint=document.getElementById('pd').value.trim();
   const age=document.getElementById('pa').value.trim();
-  if(!complaint){flashEl('pd');return}
+  if(!complaint){flashEl('pd');toast('⚠ Please enter patient symptoms');return}
 
   SID=`sess-${Date.now()}`;HIST=[];LAST_NOTE=null;
   setBtnLoad(true);showState('load');
+  playBeep(720,'sine',0.08);
 
   try{
     const res=await fetch('/api/triage',{
@@ -1034,21 +1537,23 @@ async function executeTriage(){
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({complaint,age:age||null})
     });
-    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error||`HTTP ${res.status}`)}
+    if(!res.ok){const errData=await res.json().catch(()=>({}));throw new Error(errData.error||`HTTP ${res.status}`)}
     const data=await res.json();
     HIST=data.history||[];
+    playBeep(960,'sine',0.12);
+
     if(data.triage_note){renderNote(data.triage_note)}
     else if(data.follow_up_questions?.length){
       showState('chat');clearChat();
-      appendMsg('user',e(complaint+(age?`\n\nAge: ${age}`:''))); 
-      let msg='<strong>I need a few more details to safely route this patient:</strong><br><br>';
-      data.follow_up_questions.forEach((q,i)=>{msg+=`${i+1}. ${e(q)}<br>`});
-      if(data.partial_reasoning)msg+=`<br><em style="color:var(--t2);font-size:11.5px">${e(data.partial_reasoning)}</em>`;
+      appendMsg('user',escapeHtml(complaint+(age?`\n\nPatient Age: ${age}`:''))); 
+      let msg='<strong>Clarification required to evaluate clinical routing criteria:</strong><br><br>';
+      data.follow_up_questions.forEach((q,i)=>{msg+=`${i+1}. ${escapeHtml(q)}<br>`});
+      if(data.partial_reasoning)msg+=`<br><em style="color:var(--t2);font-size:11.5px">${escapeHtml(data.partial_reasoning)}</em>`;
       appendMsg('ai',msg);enableFU(true);
     } else{
       showState('chat');clearChat();
-      appendMsg('user',e(complaint));
-      appendMsg('ai','Please provide more details below or click <strong>Generate Note</strong> when ready.');
+      appendMsg('user',escapeHtml(complaint));
+      appendMsg('ai','Please specify symptom onset and severity below or click <strong>Force Final Note</strong>.');
       enableFU(true);
     }
   }catch(err){
@@ -1062,7 +1567,9 @@ async function executeTriage(){
 async function sendFU(){
   const fi=document.getElementById('fi'),txt=fi.value.trim();
   if(!txt)return;
-  appendMsg('user',e(txt));fi.value='';enableFU(false);showTyping();
+  appendMsg('user',escapeHtml(txt));fi.value='';enableFU(false);showTyping();
+  playBeep(800,'sine',0.05);
+
   try{
     const res=await fetch('/api/followup',{
       method:'POST',headers:{'Content-Type':'application/json'},
@@ -1073,17 +1580,18 @@ async function sendFU(){
     HIST=data.history||HIST;
     rmTyping();
     if(data.triage_note){
-      appendMsg('ai',`✅ Triage note generated — Rule <strong>${e(data.triage_note.cited_rule_id)}</strong>.`);
-      setTimeout(()=>renderNote(data.triage_note),500);
+      appendMsg('ai',`✅ Triage evaluation concluded — Rule <strong>${escapeHtml(data.triage_note.cited_rule_id)}</strong>.`);
+      setTimeout(()=>renderNote(data.triage_note),400);
     } else if(data.assistant_message){
       appendMsg('ai',data.assistant_message.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>'));
       enableFU(true);
-    } else{appendMsg('ai','Please continue or click Generate Note.');enableFU(true)}
-  }catch(err){rmTyping();appendMsg('ai',`⚠ ${e(err.message)}`);enableFU(true)}
+    } else{appendMsg('ai','Information recorded. Continue response or generate final note.');enableFU(true)}
+  }catch(err){rmTyping();appendMsg('ai',`⚠ ${escapeHtml(err.message)}`);enableFU(true)}
 }
 
 async function finalise(){
   showTyping();enableFU(false);
+  playBeep(660,'sine',0.06);
   try{
     const res=await fetch('/api/finalize',{
       method:'POST',headers:{'Content-Type':'application/json'},
@@ -1093,15 +1601,13 @@ async function finalise(){
     const data=await res.json();
     rmTyping();
     if(data.triage_note){
-      appendMsg('ai',`✅ Final note — Rule <strong>${e(data.triage_note.cited_rule_id)}</strong>.`);
-      setTimeout(()=>renderNote(data.triage_note),500);
+      appendMsg('ai',`✅ Grounded note generated — Rule <strong>${escapeHtml(data.triage_note.cited_rule_id)}</strong>.`);
+      setTimeout(()=>renderNote(data.triage_note),400);
     }
-  }catch(err){rmTyping();appendMsg('ai',`⚠ ${e(err.message)}`);enableFU(true)}
+  }catch(err){rmTyping();appendMsg('ai',`⚠ ${escapeHtml(err.message)}`);enableFU(true)}
 }
 
-/* ═══════════════════════════════════════════════════════
-   CHAT HELPERS
-═══════════════════════════════════════════════════════ */
+/* Chat Helpers */
 function clearChat(){document.getElementById('chat-log').innerHTML=''}
 function appendMsg(role,html){
   const log=document.getElementById('chat-log');
@@ -1129,68 +1635,78 @@ function enableFU(on){
    RENDER TRIAGE NOTE
 ═══════════════════════════════════════════════════════ */
 const UMAP={
-  IMMEDIATE:  {cls:'ui',label:'IMMEDIATE'},
-  URGENT:     {cls:'uu',label:'URGENT'},
-  STANDARD:   {cls:'us',label:'STANDARD'},
-  ESCALATE:   {cls:'ue',label:'ESCALATE — HUMAN'},
-  NOT_MEDICAL:{cls:'un',label:'NOT MEDICAL'},
+  IMMEDIATE:  {cls:'ui',label:'IMMEDIATE EMERGENCY'},
+  URGENT:     {cls:'uu',label:'URGENT CARE'},
+  STANDARD:   {cls:'us',label:'STANDARD ROUTING'},
+  ESCALATE:   {cls:'ue',label:'ESCALATE — CLINICIAN DIRECT'},
+  NOT_MEDICAL:{cls:'un',label:'NON-MEDICAL / ADMIN'},
 };
+
 function renderNote(note){
   LAST_NOTE=note;
   const urg=note.urgency_level||'STANDARD';
   const ui=UMAP[urg]||UMAP.STANDARD;
 
-  // Banner
   const ub=document.getElementById('ub');
   ub.className=`ub ${ui.cls}`;
   document.getElementById('uname').textContent=ui.label;
   document.getElementById('udept').textContent=note.recommended_department||'—';
   document.getElementById('urule').textContent=note.cited_rule_id||'—';
 
-  // Escalation
   const eal=document.getElementById('eal');
   if(note.escalate_to_human){
     eal.style.display='flex';
-    document.getElementById('eal-rsn').textContent=note.escalation_reason||'A qualified clinician must assess directly.';
+    document.getElementById('eal-rsn').textContent=note.escalation_reason||'Direct clinician assessment required.';
   } else eal.style.display='none';
 
-  // Chips
   document.getElementById('mc-dept').textContent=note.recommended_department||'—';
   document.getElementById('mc-rule').textContent=note.cited_rule_id||'—';
-
-  // Reasoning
   document.getElementById('i-rsn').textContent=note.reasoning||'—';
 
-  // Lists
   renderList('i-rep',note.reported);
   renderList('i-est',note.established);
   renderList('i-unk',note.unknown);
 
-  // JSON
   document.getElementById('jcode').innerHTML=synHL(JSON.stringify(note,null,2));
-
   showState('res');
 }
 
 function renderList(id,arr){
   const ul=document.getElementById(id);
   if(!arr||!arr.length){ul.innerHTML='<li>None recorded</li>';return}
-  ul.innerHTML=(Array.isArray(arr)?arr:[arr]).map(i=>`<li>${e(String(i))}</li>`).join('');
+  ul.innerHTML=(Array.isArray(arr)?arr:[arr]).map(i=>`<li>${escapeHtml(String(i))}</li>`).join('');
 }
 
-/* ═══════════════════════════════════════════════════════
-   JSON SYNTAX HIGHLIGHT
-═══════════════════════════════════════════════════════ */
 function synHL(json){
   return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,m=>{
     let c='jn';
     if(/^"/.test(m)){c=/:$/.test(m)?'jk':'js';}
     else if(/true|false/.test(m))c='jb';
     else if(/null/.test(m))c='jnull';
-    return `<span class="${c}">${e(m)}</span>`;
+    return `<span class="${c}">${escapeHtml(m)}</span>`;
   });
 }
 function toggleJD(){document.getElementById('jd').classList.toggle('open')}
+
+/* ═══════════════════════════════════════════════════════
+   PRINTABLE TRIAGE SLIP MODAL
+═══════════════════════════════════════════════════════ */
+function openSlipModal(){
+  if(!LAST_NOTE){toast('⚠ Please run a triage evaluation first.');return}
+  const note=LAST_NOTE;
+  document.getElementById('slip-time').textContent=`Intake Time: ${new Date().toLocaleString()} · PS01`;
+  document.getElementById('slip-tier-badge').textContent=note.urgency_level;
+  document.getElementById('slip-dept').textContent=note.recommended_department||'—';
+  document.getElementById('slip-rule').textContent=`${note.cited_rule_id} — ${note.rule_label||'Clinical Rule'}`;
+  document.getElementById('slip-reasoning').textContent=note.reasoning||'—';
+  document.getElementById('slip-complaint').textContent=document.getElementById('pd').value||'Intake verbal description recorded.';
+  document.getElementById('slip-barcode').textContent=`||| ${note.cited_rule_id} ||| ${Date.now().toString().slice(-6)} ||||`;
+  document.getElementById('slip-modal').classList.add('active');
+  playBeep(900,'sine',0.06);
+}
+function closeSlipModal(){
+  document.getElementById('slip-modal').classList.remove('active');
+}
 
 /* ═══════════════════════════════════════════════════════
    COPY & RESET
@@ -1199,53 +1715,90 @@ function copyNote(){
   if(!LAST_NOTE)return;
   const n=LAST_NOTE;
   const txt=[
-    `NEXUS TRIAGE NOTE — ${new Date().toLocaleString()}`,
-    `Urgency    : ${n.urgency_level}`,
-    `Department : ${n.recommended_department}`,
-    `Rule ID    : ${n.cited_rule_id}`,
-    `Rule Label : ${n.rule_label||'—'}`,
-    `Reasoning  : ${n.reasoning}`,
-    `Escalate   : ${n.escalate_to_human?'YES — '+(n.escalation_reason||''):'No'}`,
-    ``,
-    `Reported   : ${(n.reported||[]).join('; ')}`,
-    `Established: ${(n.established||[]).join('; ')}`,
-    `Unknown    : ${(n.unknown||[]).join('; ')}`,
-    ``,
-    `NEXUS TRIAGE-OS · PS01 · NOT A DIAGNOSTIC TOOL`,
+    `═════════════════════════════════════════════════════════`,
+    `NEXUS TRIAGE INTAKE DOSSIER — ${new Date().toLocaleString()}`,
+    `Urgency Tier : ${n.urgency_level}`,
+    `Department   : ${n.recommended_department}`,
+    `Cited Rule ID: ${n.cited_rule_id} (${n.rule_label||'Grounded Protocol'})`,
+    `Reasoning    : ${n.reasoning}`,
+    `Escalate     : ${n.escalate_to_human?'YES — '+(n.escalation_reason||''):'No'}`,
+    `Reported     : ${(n.reported||[]).join('; ')}`,
+    `Established  : ${(n.established||[]).join('; ')}`,
+    `Unknowns     : ${(n.unknown||[]).join('; ')}`,
+    `═════════════════════════════════════════════════════════`,
+    `NEXUS TRIAGE-OS · PS01 · CLINICAL ROUTING ONLY`,
   ].join('\n');
-  navigator.clipboard.writeText(txt).then(()=>toast('✓ Triage note copied to clipboard'));
+  navigator.clipboard.writeText(txt).then(()=>{
+    toast('✓ Triage dossier copied to clipboard');
+    playBeep(980,'sine',0.08);
+  });
 }
 
 function resetAll(){
   SID=null;HIST=[];LAST_NOTE=null;
   document.getElementById('pd').value='';
   document.getElementById('pa').value='';
-  updateCC();showState('idle');
+  updateCC();scanKeywords();showState('idle');
   setBtnLoad(false);enableFU(false);
   clearChat();
 }
 
 /* ═══════════════════════════════════════════════════════
-   RULES TABLE
+   RULES TABLE & FILTERING
 ═══════════════════════════════════════════════════════ */
-(async function loadRules(){
+async function loadRules(){
   try{
     const data=await(await fetch('/api/rules')).json();
-    const rules=data.rules||[];
-    document.getElementById('rc').textContent=`${rules.length} rules`;
-    document.getElementById('rtb').innerHTML=rules.map(r=>`
-      <tr>
-        <td><span class="rip">${e(r.id)}</span></td>
-        <td style="color:var(--t0)">${e(r.category.replace(/_/g,' '))}</td>
-        <td>${e(r.label)}</td>
-        <td><span class="up ${r.urgency}">${e(r.urgency.replace('_',' '))}</span></td>
-        <td>${e(r.department)}</td>
-      </tr>`).join('')||'<tr><td colspan="5">No rules</td></tr>';
+    ALL_RULES=data.rules||[];
+    document.getElementById('rc').textContent=`${ALL_RULES.length} Rules Loaded`;
+    renderRulesTable(ALL_RULES);
   }catch{
     document.getElementById('rtb').innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--t2);padding:18px">Failed to load rules</td></tr>';
-    document.getElementById('rc').textContent='Error';
+    document.getElementById('rc').textContent='Offline';
   }
-})();
+}
+loadRules();
+
+function renderRulesTable(rules){
+  const rtb=document.getElementById('rtb');
+  if(!rules.length){
+    rtb.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--t2);padding:20px">No matching rules found</td></tr>';
+    return;
+  }
+  rtb.innerHTML=rules.map(r=>`
+    <tr id="rule-row-${r.id}">
+      <td><span class="rip">${escapeHtml(r.id)}</span></td>
+      <td style="color:var(--t0)">${escapeHtml(r.category.replace(/_/g,' '))}</td>
+      <td><strong>${escapeHtml(r.label)}</strong></td>
+      <td><span class="up ${r.urgency}">${escapeHtml(r.urgency.replace('_',' '))}</span></td>
+      <td>${escapeHtml(r.department)}</td>
+    </tr>`).join('');
+}
+
+function filterRules(){
+  const query=document.getElementById('r-search').value.toLowerCase();
+  let filtered=ALL_RULES;
+  if(CURRENT_RULE_FILTER!=='ALL'){
+    filtered=filtered.filter(r=>r.urgency===CURRENT_RULE_FILTER);
+  }
+  if(query){
+    filtered=filtered.filter(r=>
+      r.id.toLowerCase().includes(query) ||
+      r.label.toLowerCase().includes(query) ||
+      r.category.toLowerCase().includes(query) ||
+      r.department.toLowerCase().includes(query)
+    );
+  }
+  renderRulesTable(filtered);
+}
+
+function setRuleFilter(filter){
+  CURRENT_RULE_FILTER=filter;
+  document.querySelectorAll('.rf-btn').forEach(btn=>{
+    btn.classList.toggle('active',btn.textContent===filter);
+  });
+  filterRules();
+}
 
 /* ═══════════════════════════════════════════════════════
    UTILS
@@ -1256,70 +1809,106 @@ function setBtnLoad(on){
 }
 function flashEl(id){
   const el=document.getElementById(id);
-  el.style.borderColor='rgba(34,232,240,.5)';
-  el.style.boxShadow='0 0 0 3px rgba(34,232,240,.1)';
-  setTimeout(()=>{el.style.borderColor='';el.style.boxShadow='';},800);
+  if(!el)return;
+  el.style.borderColor='rgba(34,232,240,.6)';
+  el.style.boxShadow='0 0 0 3px rgba(34,232,240,.18)';
+  setTimeout(()=>{el.style.borderColor='';el.style.boxShadow='';},700);
 }
 let _tt;
 function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
-  clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),3000);
+  clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2800);
 }
-function e(s){
+function escapeHtml(s){
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 /* ═══════════════════════════════════════════════════════
-   LANDING SCREEN
+   BOOT SEQUENCE & LANDING ACTIONS
 ═══════════════════════════════════════════════════════ */
-document.getElementById('btn-init').addEventListener('click', () => {
-  document.getElementById('l-main').style.display = 'none';
-  const boot = document.getElementById('l-boot');
-  boot.style.display = 'flex';
-  
-  const logs = [
-    "Mounting clinical triage rules...",
-    "Verifying Gemini API environment...",
-    "Initializing grounding protocol...",
-    "Establishing local deterministic ruleset...",
-    "System Ready."
+function startBootSequence(onComplete){
+  document.getElementById('l-main').style.display='none';
+  const boot=document.getElementById('l-boot');
+  boot.style.display='flex';
+
+  const logs=[
+    "Mounting clinical triage ruleset (R01–R12)...",
+    "Calibrating zero-diagnosis safety guardrails...",
+    "Connecting Gemini 3.5 Flash Lite neural routing...",
+    "Activating local deterministic fail-safe engine...",
+    "Initializing clinical telemetry dossier pipeline...",
+    "System Ready. Entering triage terminal."
   ];
-  
-  const logEl = document.getElementById('b-logs');
-  const progFill = document.getElementById('b-prog-fill');
-  
-  let time = 0;
-  const duration = 1800;
-  const interval = 50;
-  
-  const intv = setInterval(() => {
-    time += interval;
-    const pct = Math.min(100, (time / duration) * 100);
-    progFill.style.width = pct + '%';
-    
-    const logIdx = Math.floor((pct / 100) * logs.length);
-    if (logIdx < logs.length) {
-      const currentLogs = logs.slice(0, logIdx + 1);
-      logEl.innerHTML = currentLogs.map(l => `<div class="b-log-row">> ${l}</div>`).join('');
+
+  const logEl=document.getElementById('b-logs');
+  const progFill=document.getElementById('b-prog-fill');
+  const pctTxt=document.getElementById('b-pct-txt');
+  const statusTxt=document.getElementById('b-status-txt');
+
+  let time=0;
+  const duration=1800;
+  const interval=50;
+
+  let intv=setInterval(()=>{
+    time+=interval;
+    const pct=Math.min(100,Math.round((time/duration)*100));
+    progFill.style.width=pct+'%';
+    pctTxt.textContent=pct+'%';
+
+    const logIdx=Math.floor((pct/100)*logs.length);
+    if(logIdx<logs.length){
+      statusTxt.textContent=logs[logIdx].toUpperCase();
+      const currentLogs=logs.slice(0,logIdx+1);
+      logEl.innerHTML=currentLogs.map(l=>`<div class="b-log-row">> ${l}</div>`).join('');
     }
-    
-    if (time >= duration) {
+
+    if(time>=duration){
       clearInterval(intv);
-      setTimeout(() => {
-        const land = document.getElementById('landing');
-        land.classList.add('out');
-        setTimeout(() => {
-          land.style.display = 'none';
-          const shell = document.getElementById('app-shell');
-          shell.style.display = 'flex';
-          // Small delay to trigger transition
-          setTimeout(() => shell.style.opacity = '1', 50);
-        }, 500);
-      }, 300);
+      completeBoot();
     }
-  }, interval);
+  },interval);
+
+  function completeBoot(){
+    playBeep(1040,'sine',0.15);
+    setTimeout(()=>{
+      const land=document.getElementById('landing');
+      land.classList.add('out');
+      setTimeout(()=>{
+        land.style.display='none';
+        const shell=document.getElementById('app-shell');
+        shell.style.display='flex';
+        setTimeout(()=>shell.style.opacity='1',50);
+        if(onComplete)onComplete();
+      },450);
+    },200);
+  }
+
+  document.getElementById('btn-skip-boot').onclick=()=>{
+    clearInterval(intv);
+    completeBoot();
+  };
+}
+
+document.getElementById('btn-init').addEventListener('click',()=>{
+  playBeep(700,'sine',0.06);
+  startBootSequence();
 });
-{% endraw %}</script>
+
+document.getElementById('btn-demo').addEventListener('click',()=>{
+  playBeep(880,'triangle',0.08);
+  startBootSequence(()=>{
+    loadScenario(0);
+    setTimeout(executeTriage,400);
+  });
+});
+
+document.getElementById('btn-rules-jump').addEventListener('click',()=>{
+  playBeep(640,'sine',0.05);
+  startBootSequence(()=>{
+    scrollToRules();
+  });
+});
+</script>
 </body>
 </html>
