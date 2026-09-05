@@ -551,18 +551,38 @@ footer{
   50%{transform:scale(1.1);opacity:1;text-shadow:0 0 32px var(--cyan),0 0 70px rgba(168,85,247,0.7)}
 }
 
-/* Ticker & Hero Headings */
+/* Meta Row, Ticker & Track ID */
+.l-meta-row{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  flex-wrap:wrap;margin-bottom:14px;
+}
 .l-ticker{
   display:inline-flex;align-items:center;gap:8px;padding:6px 14px;
   background:rgba(34,232,240,0.08);border:1px solid rgba(34,232,240,0.25);
   border-radius:30px;font-family:var(--fm);font-size:9.5px;color:var(--cyan);
-  letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:0;
   box-shadow:0 0 16px rgba(34,232,240,0.1);
 }
 .l-beacon{
   width:7px;height:7px;border-radius:50%;background:#22c55e;
   box-shadow:0 0 8px #22c55e;animation:spulse 1.8s infinite;
 }
+.l-track-pill{
+  display:inline-flex;align-items:center;gap:7px;padding:6px 14px;
+  background:rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.38);
+  border-radius:30px;font-family:var(--fm);font-size:9.5px;
+  letter-spacing:.1em;box-shadow:0 0 18px rgba(168,85,247,0.18);
+}
+.l-track-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--vio);
+  box-shadow:0 0 8px var(--vio);animation:vpulse 1.8s infinite ease-in-out;
+}
+@keyframes vpulse{
+  0%,100%{transform:scale(0.85);opacity:0.6}
+  50%{transform:scale(1.25);opacity:1}
+}
+.l-track-txt{color:var(--t1);font-weight:500;text-transform:uppercase}
+.l-track-code{color:var(--vio);font-weight:800;letter-spacing:.12em}
 
 .l-hero{
   font-family:var(--fm);font-size:clamp(30px, 4.8vw, 52px);font-weight:900;
@@ -589,14 +609,32 @@ footer{
   box-shadow:0 8px 32px rgba(0,0,0,0.45),inset 0 0 20px rgba(34,232,240,0.03);
   backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
 }
-.l-ecg-wrap{display:flex;align-items:center;gap:12px;flex:1}
+.l-ecg-wrap{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
 .l-ecg-badge{
+  display:inline-flex;align-items:center;gap:6px;
   font-family:var(--fm);font-size:8.5px;color:var(--cyan);
-  background:rgba(34,232,240,0.12);padding:3px 8px;border-radius:4px;
-  letter-spacing:.1em;white-space:nowrap;
+  background:rgba(34,232,240,0.12);border:1px solid rgba(34,232,240,0.25);
+  padding:4px 8px;border-radius:4px;
+  letter-spacing:.1em;white-space:nowrap;flex-shrink:0;
 }
-canvas#l-ecg{height:32px;width:180px;border-radius:4px}
-.l-vital-group{display:flex;align-items:center;gap:18px}
+.l-ecg-blip{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--cyan);box-shadow:0 0 6px var(--cyan);
+  animation:ecgBlip 0.833s infinite ease-in-out;flex-shrink:0;
+}
+@keyframes ecgBlip{
+  0%,100%{transform:scale(0.8);opacity:0.5}
+  15%{transform:scale(1.4);opacity:1;box-shadow:0 0 10px #22e8f0}
+  35%{transform:scale(0.85);opacity:0.6}
+}
+.l-ecg-box{
+  position:relative;display:flex;align-items:center;flex:1;min-width:180px;
+  background:rgba(4,8,20,0.75);border:1px solid rgba(34,232,240,0.22);
+  border-radius:6px;padding:2px 6px;box-shadow:inset 0 0 14px rgba(0,0,0,0.6);
+  overflow:hidden;
+}
+canvas#l-ecg{height:36px;width:100%;display:block;border-radius:4px}
+.l-vital-group{display:flex;align-items:center;gap:18px;flex-shrink:0}
 .l-vital-item{display:flex;flex-direction:column;align-items:center;font-family:var(--fm)}
 .l-vital-val{font-size:12px;font-weight:700;color:var(--cyan);letter-spacing:.04em}
 .l-vital-lbl{font-size:8px;color:var(--t2);letter-spacing:.1em;text-transform:uppercase}
@@ -765,10 +803,17 @@ canvas#l-ecg{height:32px;width:180px;border-radius:4px}
       <div class="l-core-ico">⚕</div>
     </div>
 
-    <!-- Status Ticker -->
-    <div class="l-ticker">
-      <div class="l-beacon"></div>
-      <span>PROTOCOL ACTIVE // ZERO-DIAGNOSIS GUARDRAILS // PS01 GCC EDITION</span>
+    <!-- Status Ticker & Track ID Pill -->
+    <div class="l-meta-row">
+      <div class="l-ticker">
+        <div class="l-beacon"></div>
+        <span>PROTOCOL ACTIVE // ZERO-DIAGNOSIS GUARDRAILS // GCC EDITION</span>
+      </div>
+      <div class="l-track-pill">
+        <span class="l-track-dot"></span>
+        <span class="l-track-txt">TRACK_ID:</span>
+        <span class="l-track-code">PS01</span>
+      </div>
     </div>
 
     <!-- Hero Titles -->
@@ -779,8 +824,10 @@ canvas#l-ecg{height:32px;width:180px;border-radius:4px}
     <!-- Live Biometric Waveform & Vitals Bar -->
     <div class="l-vitals-bar">
       <div class="l-ecg-wrap">
-        <span class="l-ecg-badge">LIVE ECG</span>
-        <canvas id="l-ecg" width="180" height="32"></canvas>
+        <span class="l-ecg-badge"><span class="l-ecg-blip"></span>LIVE ECG</span>
+        <div class="l-ecg-box">
+          <canvas id="l-ecg" width="420" height="36"></canvas>
+        </div>
       </div>
       <div class="l-vital-group">
         <div class="l-vital-item">
@@ -842,7 +889,7 @@ canvas#l-ecg{height:32px;width:180px;border-radius:4px}
       </button>
     </div>
 
-    <div class="l-specs">Powered by Gemini 3.5 Flash Lite &amp; Local Grounded Rules · Zero-Diagnosis Policy · IIIT-H / GCC Edition</div>
+    <div class="l-specs">Powered by Gemini 3.5 Flash Lite &amp; Local Grounded Rules · Zero-Diagnosis Policy · TRACK_ID: PS01 · IIIT-H / GCC Edition</div>
   </div>
 
   <!-- Boot Sequence Screen -->
@@ -1243,54 +1290,199 @@ canvas#l-ecg{height:32px;width:180px;border-radius:4px}
 })();
 
 /* ═══════════════════════════════════════════════════════
-   LIVE ECG MONITOR ANIMATION
+   LIVE ECG MONITOR ANIMATION (CLINICAL LEAD II SYNTHESIZER)
 ═══════════════════════════════════════════════════════ */
 (function(){
-  const ecgCv=document.getElementById('l-ecg');
-  if(!ecgCv)return;
-  const ctx=ecgCv.getContext('2d');
-  let t=0,pts=[];
-  const W=ecgCv.width,H=ecgCv.height;
-  for(let x=0;x<W;x++)pts.push(H/2);
+  const ecgCv = document.getElementById('l-ecg');
+  if(!ecgCv) return;
+  const ctx = ecgCv.getContext('2d');
+  const vHr = document.getElementById('v-hr');
 
-  function getEcgY(time){
-    const cycle = time % 80;
-    const mid = H/2;
-    if(cycle > 20 && cycle < 26) return mid - 4; // P wave
-    if(cycle === 32) return mid + 3; // Q
-    if(cycle === 34) return mid - 14; // R peak
-    if(cycle === 36) return mid + 8; // S
-    if(cycle > 46 && cycle < 56) return mid - 5; // T wave
-    return mid + (Math.sin(time*0.1)*0.8);
+  // High-DPI screen scaling & responsive width
+  let dpr = window.devicePixelRatio || 1;
+  let W = 420, H = 36;
+
+  function resizeCanvas(){
+    dpr = window.devicePixelRatio || 1;
+    const rect = ecgCv.getBoundingClientRect();
+    W = rect.width > 0 ? rect.width : 420;
+    H = rect.height > 0 ? rect.height : 36;
+    ecgCv.width = Math.round(W * dpr);
+    ecgCv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+  if(window.ResizeObserver){
+    new ResizeObserver(() => resizeCanvas()).observe(ecgCv);
   }
 
-  function renderEcg(){
-    t++;
-    pts.shift();
-    pts.push(getEcgY(t));
+  // Physiologically modeled Lead II ECG (Gaussian wavelet summation)
+  function ecgPoint(phase){
+    const p = ((phase % 1.0) + 1.0) % 1.0;
+    let v = 0.0;
 
-    ctx.clearRect(0,0,W,H);
+    // P wave (Atrial depolarization: smooth rounded hump)
+    const dp = p - 0.18;
+    v -= 3.2 * Math.exp(-(dp * dp) / (2.0 * 0.030 * 0.030));
+
+    // Q wave (Septal depolarization: crisp downward notch)
+    const dq = p - 0.355;
+    v += 2.4 * Math.exp(-(dq * dq) / (2.0 * 0.008 * 0.008));
+
+    // R wave (Ventricular depolarization: tall sharp spike)
+    const dr = p - 0.385;
+    v -= 15.6 * Math.exp(-(dr * dr) / (2.0 * 0.010 * 0.010));
+
+    // S wave (Terminal ventricular activation: sharp downward dip)
+    const ds = p - 0.415;
+    v += 5.2 * Math.exp(-(ds * ds) / (2.0 * 0.011 * 0.011));
+
+    // T wave (Ventricular repolarization: broad rounded dome)
+    const dt = p - 0.63;
+    const st = p < 0.63 ? 0.060 : 0.045;
+    v -= 5.2 * Math.exp(-(dt * dt) / (2.0 * st * st));
+
+    // U wave (subtle physiological repolarization)
+    const du = p - 0.77;
+    v -= 0.8 * Math.exp(-(du * du) / (2.0 * 0.025 * 0.025));
+
+    return v;
+  }
+
+  // Animation constants: 72 BPM calibrated
+  const cycleDuration = 60 / 72; // ~0.833 seconds
+  const wavelength = 105; // pixels per cardiac cycle (~2.1 beats visible across 220px)
+  const speed = wavelength / cycleDuration; // ~126 px/s
+  let lastTime = performance.now();
+  let scrollPos = 0;
+  let lastBeatIndex = -1;
+
+  function renderEcg(currentTime){
+    const dt = Math.min((currentTime - lastTime) / 1000, 0.1);
+    lastTime = currentTime;
+    scrollPos += dt * speed;
+
+    const mid = H / 2;
+
+    // Clear frame
+    ctx.clearRect(0, 0, W, H);
+
+    // 1. Draw subtle clinical telemetry grid
+    ctx.save();
+    ctx.lineWidth = 0.5;
+
+    // Minor 8px grid
+    ctx.strokeStyle = 'rgba(34, 232, 240, 0.04)';
     ctx.beginPath();
-    ctx.strokeStyle='#22e8f0';
-    ctx.lineWidth=1.5;
-    ctx.shadowColor='#22e8f0';
-    ctx.shadowBlur=8;
-
-    for(let x=0;x<pts.length;x++){
-      if(x===0)ctx.moveTo(x,pts[x]);
-      else ctx.lineTo(x,pts[x]);
+    for(let y = 5; y < H; y += 8){
+      ctx.moveTo(0, y); ctx.lineTo(W, y);
+    }
+    for(let x = 5; x < W; x += 8){
+      ctx.moveTo(x, 0); ctx.lineTo(x, H);
     }
     ctx.stroke();
 
-    // Leading glowing dot
+    // Major 40px divisions
+    ctx.strokeStyle = 'rgba(34, 232, 240, 0.08)';
     ctx.beginPath();
-    ctx.arc(W-2,pts[pts.length-1],2.5,0,Math.PI*2);
-    ctx.fillStyle='#ffffff';
+    for(let x = 20; x < W; x += 40){
+      ctx.moveTo(x, 0); ctx.lineTo(x, H);
+    }
+    ctx.stroke();
+
+    // Isoelectric horizontal baseline
+    ctx.strokeStyle = 'rgba(34, 232, 240, 0.14)';
+    ctx.beginPath();
+    ctx.moveTo(0, mid); ctx.lineTo(W, mid);
+    ctx.stroke();
+    ctx.restore();
+
+    // 2. Trace continuous waveform from left to right
+    const leadX = W - 3;
+    let leadY = mid;
+    let leadPhase = 0;
+
+    ctx.beginPath();
+    for(let x = 0; x <= leadX; x += 1){
+      const phase = (scrollPos - (leadX - x)) / wavelength;
+      const y = mid + ecgPoint(phase);
+      if(x === 0){
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+      }
+      if(x === leadX){
+        leadY = y;
+        leadPhase = ((phase % 1.0) + 1.0) % 1.0;
+      }
+    }
+
+    // 3. Render neon glowing stroke with left-edge fade
+    const strokeGrad = ctx.createLinearGradient(0, 0, W, 0);
+    strokeGrad.addColorStop(0, 'rgba(34, 232, 240, 0.0)');
+    strokeGrad.addColorStop(0.12, 'rgba(34, 232, 240, 0.85)');
+    strokeGrad.addColorStop(1, '#22e8f0');
+
+    ctx.save();
+    ctx.strokeStyle = strokeGrad;
+    ctx.lineWidth = 1.75;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.shadowColor = '#22e8f0';
+    ctx.shadowBlur = 7;
+    ctx.stroke();
+    ctx.restore();
+
+    // 4. Leading glowing pulse beacon & R-peak flash sync
+    const isRPeak = Math.abs(leadPhase - 0.385) < 0.025;
+    const currentBeat = Math.floor(scrollPos / wavelength);
+
+    if(currentBeat !== lastBeatIndex && isRPeak){
+      lastBeatIndex = currentBeat;
+      if(vHr){
+        vHr.style.transition = 'text-shadow 0.12s ease, color 0.12s ease';
+        vHr.style.textShadow = '0 0 12px rgba(34,232,240,0.95)';
+        vHr.style.color = '#ffffff';
+        setTimeout(()=>{
+          if(vHr){
+            vHr.style.textShadow = 'none';
+            vHr.style.color = 'var(--cyan)';
+          }
+        }, 160);
+      }
+    }
+
+    ctx.save();
+    if(isRPeak){
+      // Expanded flash aura when R-wave occurs
+      ctx.beginPath();
+      ctx.arc(leadX, leadY, 6, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(34, 232, 240, 0.45)';
+      ctx.shadowColor = '#22e8f0';
+      ctx.shadowBlur = 12;
+      ctx.fill();
+    }
+
+    // Outer aura
+    ctx.beginPath();
+    ctx.arc(leadX, leadY, 3.5, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(34, 232, 240, 0.35)';
     ctx.fill();
+
+    // Inner bright core
+    ctx.beginPath();
+    ctx.arc(leadX, leadY, 2, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = '#ffffff';
+    ctx.shadowBlur = 6;
+    ctx.fill();
+    ctx.restore();
 
     requestAnimationFrame(renderEcg);
   }
-  renderEcg();
+
+  requestAnimationFrame(renderEcg);
 })();
 
 /* ═══════════════════════════════════════════════════════
@@ -1542,14 +1734,21 @@ async function executeTriage(){
     HIST=data.history||[];
     playBeep(960,'sine',0.12);
 
-    if(data.triage_note){renderNote(data.triage_note)}
-    else if(data.follow_up_questions?.length){
+    if(data.requires_followup || data.status === 'follow_up' || (!data.triage_note && data.follow_up_questions?.length)){
       showState('chat');clearChat();
       appendMsg('user',escapeHtml(complaint+(age?`\n\nPatient Age: ${age}`:''))); 
       let msg='<strong>Clarification required to evaluate clinical routing criteria:</strong><br><br>';
-      data.follow_up_questions.forEach((q,i)=>{msg+=`${i+1}. ${escapeHtml(q)}<br>`});
+      const questions = (data.follow_up_questions && data.follow_up_questions.length) ? data.follow_up_questions : [
+        "Where is the pain located right now (e.g., lower-right side, upper stomach, or diffuse across the whole abdomen)?",
+        "Did the pain start suddenly, or has it been developing gradually over time?",
+        "Are you experiencing any fever, chills, persistent vomiting, or inability to keep fluids down?"
+      ];
+      questions.forEach((q,i)=>{msg+=`${i+1}. ${escapeHtml(q)}<br>`});
       if(data.partial_reasoning)msg+=`<br><em style="color:var(--t2);font-size:11.5px">${escapeHtml(data.partial_reasoning)}</em>`;
-      appendMsg('ai',msg);enableFU(true);
+      appendMsg('ai',msg);
+      enableFU(true);
+    } else if(data.triage_note){
+      renderNote(data.triage_note);
     } else{
       showState('chat');clearChat();
       appendMsg('user',escapeHtml(complaint));
@@ -1579,13 +1778,23 @@ async function sendFU(){
     const data=await res.json();
     HIST=data.history||HIST;
     rmTyping();
-    if(data.triage_note){
-      appendMsg('ai',`✅ Triage evaluation concluded — Rule <strong>${escapeHtml(data.triage_note.cited_rule_id)}</strong>.`);
+    if(data.triage_note && !data.requires_followup){
+      appendMsg('ai',`✅ Triage evaluation concluded — Rule <strong>${escapeHtml(data.triage_note.cited_rule_id)}</strong> (${escapeHtml(data.triage_note.rule_label || '')}).`);
       setTimeout(()=>renderNote(data.triage_note),400);
     } else if(data.assistant_message){
       appendMsg('ai',data.assistant_message.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>'));
+      if(data.requires_followup !== false) enableFU(true);
+      else if(data.triage_note) setTimeout(()=>renderNote(data.triage_note),600);
+    } else if(data.follow_up_questions?.length){
+      let msg='<strong>Further clarification needed:</strong><br><br>';
+      data.follow_up_questions.forEach((q,i)=>{msg+=`${i+1}. ${escapeHtml(q)}<br>`});
+      if(data.partial_reasoning)msg+=`<br><em style="color:var(--t2);font-size:11.5px">${escapeHtml(data.partial_reasoning)}</em>`;
+      appendMsg('ai',msg);
       enableFU(true);
-    } else{appendMsg('ai','Information recorded. Continue response or generate final note.');enableFU(true)}
+    } else{
+      appendMsg('ai','Information recorded. Continue response or generate final note.');
+      enableFU(true);
+    }
   }catch(err){rmTyping();appendMsg('ai',`⚠ ${escapeHtml(err.message)}`);enableFU(true)}
 }
 
