@@ -2,6 +2,14 @@ TRACK_ID=PS01
 
 # NexusTriage-OS
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Available-22e8f0?style=for-the-badge&logo=render&logoColor=black)](https://nexus-triage-1.onrender.com)
+[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://html.com/)
+[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://www.w3.org/Style/CSS/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://javascript.info/)
+
+
 ## Architectural Summary
 NexusTriage-OS is a state-of-the-art Patient Intake Triage Assistant built using a lightweight Flask backend and a highly dynamic, zero-dependency HTML5/CSS3/Vanilla JS frontend. The system acts as a "Grounded Clinical Routing Engine." 
 It bridges the gap between unstructured, plain-language patient complaints and a deterministic set of clinical triage rules (stored locally in JSON format). It uses Google's `gemini-3.5-flash-lite` model for natural language understanding and structuring, while rigidly enforcing safety through system instructions and grounding it strictly to the available ruleset.
