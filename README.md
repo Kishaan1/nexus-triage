@@ -44,3 +44,8 @@ The frontend includes 4 "Quick-Load Scenarios" to demonstrate the breadth of the
 2. **🌡️ Routine Mild Fever** (Rule `RULE-F-01`): Demonstrates a standard, low-risk assessment routing the patient to General Practice.
 3. **❓ Ambiguous Abdominal Pain** (Rule `RULE-AB-01` / Escalation): Demonstrates the system's safety nets. Unclear abdominal pain triggers the Follow-up Protocol to gather more data, and if uncertainty persists, routes as `URGENT` or escalates to a human clinician.
 4. **🚫 Administrative Null Case** (Rule `RULE-ADMIN-01`): Demonstrates robust boundary handling. When a patient asks for paperwork or billing, the system correctly identifies it as a `NOT_MEDICAL` request and routes them to Administration.
+
+## 🚀 Submission Checklist
+- [x] Single-command startup on port 8000
+- [x] Gemini API non-diagnostic clinical routing
+- [x] Follow-up protocol for ambiguous inputs
