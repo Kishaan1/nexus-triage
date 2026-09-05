@@ -2,10 +2,17 @@ TRACK_ID=PS01
 # 🏥 NexusTriage-OS
 ### Autonomous Grounded Patient Intake & Clinical Routing Engine
 
-[![Python 3](https://img.shields.io/badge/Python-3-3776AB?logo=python&logoColor=white)](https://nexus-triage-1.onrender.com)
+[![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-000000?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![Google Gemini API](https://img.shields.io/badge/Google%20Gemini%20API-4285F4?logo=google&logoColor=white)](https://ai.google.dev/)
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
+[![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Render](https://img.shields.io/badge/Render-Live-46E3B7?logo=render&logoColor=white)](https://nexus-triage-1.onrender.com)
 [![YouTube Demo](https://img.shields.io/badge/YouTube-Demo%20Video-FF0000?logo=youtube&logoColor=white)](https://youtu.be/BOXTUyqze84)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?logo=github&logoColor=white)](https://github.com/Kishaan1/nexus-triage)
+
+🛠️ **Languages & Frameworks:** 🐍 Python | 🌶️ Flask | ♊ Google Gemini API | 🌐 HTML / CSS / JavaScript
 
 🌐 **Render Live Link:** [https://nexus-triage-1.onrender.com](https://nexus-triage-1.onrender.com)  
 🎥 **Demo Video:** [https://youtu.be/BOXTUyqze84](https://youtu.be/BOXTUyqze84)  
