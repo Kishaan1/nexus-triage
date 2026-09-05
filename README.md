@@ -73,3 +73,28 @@ NexusTriage-OS operates strictly as a **Clinical Routing Engine** and never prov
 - [x] Zero third-party vector databases, external search engines, or closed SaaS wrappers
 - [x] Strictly grounded in local `data/triage_rules.json`
 - [x] Minimal production dependencies in `requirements.txt`
+
+---
+
+### 🤖 2. Text to Give to Google Antigravity
+
+Paste this prompt directly into Antigravity (Agent Builder / Mission Control) to give it full context over the project:
+
+```text
+Project Name: NexusTriage-OS
+Track ID: PS01 (Healthcare - Patient Intake Triage Assistant)
+Repository: https://github.com/Kishaan1/nexus-triage
+Demo Video: https://youtu.be/BOXTUyqze84
+Tech Stack: Python, Flask, Google Gemini API, HTML/CSS/JavaScript
+
+Project Context & System Architecture:
+NexusTriage-OS is a clinical intake triage and routing engine designed for Track PS01. It takes unstructured patient complaints and deterministically maps them to urgency tiers (Immediate Emergency, Urgent, Semi-Urgent, Routine) and destination hospital departments without providing medical diagnoses or drug prescriptions.
+
+Core Mechanisms:
+1. Grounded Determinism: Utilizes `data/triage_rules.json` to enforce deterministic rule citations (such as Rule R05 for acute chest pain/emergency escalation and Rule R11 for clinical ambiguity).
+2. Epistemic Guardrails: Separates subjective patient-reported symptoms from established clinical observations and unverified assumptions.
+3. Interactive Clarification: When critical clinical parameters are missing, the engine triggers an interactive follow-up clarification protocol rather than making speculative assumptions.
+4. LLM Role: Powered by Google Gemini via the official SDK strictly for natural language entity parsing and conversational follow-up questions, leaving routing decisions grounded in deterministic clinical rules.
+
+Please inspect the repository, maintain all clinical safety guardrails, and reference this architecture for any automated workflows or code generation tasks.
+```
