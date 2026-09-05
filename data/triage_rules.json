@@ -1,0 +1,244 @@
+{
+  "version": "1.0",
+  "description": "Synthetic triage rules for walk-in patient intake. These rules are for routing purposes only and do not constitute medical diagnosis.",
+  "rules": [
+    {
+      "id": "R01",
+      "category": "fever",
+      "label": "High Fever / Fever with Danger Signs",
+      "trigger_keywords": ["fever", "temperature", "hot", "burning up", "chills"],
+      "conditions": {
+        "temperature_c_gte": 39.5,
+        "or_flags": ["stiff neck", "rash", "seizure", "altered consciousness", "difficulty breathing", "immunocompromised"]
+      },
+      "urgency": "IMMEDIATE",
+      "department": "Emergency",
+      "escalate_to_human": true,
+      "reasoning": "Fever ≥39.5 °C or fever accompanied by danger signs (stiff neck, rash, seizure, altered consciousness) indicates potential life-threatening infection or sepsis.",
+      "required_info": ["temperature", "duration_hours", "associated_symptoms"],
+      "follow_up_questions": [
+        "What is the patient's current temperature (if measured)?",
+        "How long has the fever been present?",
+        "Is there any neck stiffness, rash, confusion, or difficulty breathing?"
+      ]
+    },
+    {
+      "id": "R02",
+      "category": "fever",
+      "label": "Moderate Fever Without Danger Signs",
+      "trigger_keywords": ["fever", "temperature", "feeling hot", "mild fever"],
+      "conditions": {
+        "temperature_c_range": [37.5, 39.4],
+        "no_danger_signs": true
+      },
+      "urgency": "URGENT",
+      "department": "General Practice / Urgent Care",
+      "escalate_to_human": false,
+      "reasoning": "Fever between 37.5 °C and 39.4 °C without danger signs warrants timely evaluation but is not immediately life-threatening.",
+      "required_info": ["temperature", "duration_hours"],
+      "follow_up_questions": [
+        "What is the patient's temperature?",
+        "How long have they had the fever?",
+        "Any other symptoms such as cough, sore throat, or rash?"
+      ]
+    },
+    {
+      "id": "R03",
+      "category": "injury",
+      "label": "Significant Trauma / Suspected Fracture or Severe Wound",
+      "trigger_keywords": ["fell", "hit", "accident", "bleeding", "cut", "wound", "fracture", "broken", "crash", "trauma"],
+      "conditions": {
+        "or_flags": ["heavy bleeding", "suspected fracture", "head injury", "loss of consciousness", "deformity", "unable to bear weight"]
+      },
+      "urgency": "IMMEDIATE",
+      "department": "Emergency",
+      "escalate_to_human": true,
+      "reasoning": "Significant trauma with heavy bleeding, suspected fractures, head injury, or loss of consciousness requires immediate stabilisation.",
+      "required_info": ["mechanism_of_injury", "bleeding_status", "consciousness"],
+      "follow_up_questions": [
+        "How did the injury occur?",
+        "Is there active bleeding that cannot be controlled?",
+        "Did the patient lose consciousness at any point?",
+        "Is there visible deformity or inability to move a limb?"
+      ]
+    },
+    {
+      "id": "R04",
+      "category": "injury",
+      "label": "Minor Injury (Laceration, Sprain, Bruise)",
+      "trigger_keywords": ["scratch", "scrape", "sprain", "bruise", "twisted", "minor cut", "bump"],
+      "conditions": {
+        "no_flags": ["heavy bleeding", "suspected fracture", "head injury", "loss of consciousness"]
+      },
+      "urgency": "STANDARD",
+      "department": "Minor Injuries Unit",
+      "escalate_to_human": false,
+      "reasoning": "Minor injuries without danger signs can be managed in the Minor Injuries Unit.",
+      "required_info": ["injury_location", "bleeding_status"],
+      "follow_up_questions": [
+        "Where exactly is the injury?",
+        "Is there any bleeding? If so, can it be controlled with pressure?",
+        "Can the patient move the affected area?"
+      ]
+    },
+    {
+      "id": "R05",
+      "category": "chest_pain",
+      "label": "Chest Pain with Cardiac / High-Risk Features",
+      "trigger_keywords": ["chest pain", "chest tightness", "chest pressure", "heart", "left arm pain", "jaw pain", "squeezing"],
+      "conditions": {
+        "or_flags": ["radiation to arm or jaw", "sweating", "nausea with chest pain", "sudden onset", "crushing pressure", "syncope", "over 40 years old with risk factors"]
+      },
+      "urgency": "IMMEDIATE",
+      "department": "Emergency / Cardiology",
+      "escalate_to_human": true,
+      "reasoning": "Chest pain with radiation, sweating, nausea, or crushing quality is consistent with acute coronary syndrome and requires immediate assessment including ECG.",
+      "required_info": ["pain_character", "radiation", "onset", "associated_symptoms", "age", "cardiac_history"],
+      "follow_up_questions": [
+        "Can you describe the pain — is it sharp, crushing, or pressure-like?",
+        "Does the pain spread to the arm, jaw, or back?",
+        "Is there any sweating, nausea, or shortness of breath?",
+        "When did the pain start and was it sudden?",
+        "Does the patient have a history of heart disease or high blood pressure?"
+      ]
+    },
+    {
+      "id": "R06",
+      "category": "chest_pain",
+      "label": "Chest Pain with Low-Risk Features",
+      "trigger_keywords": ["chest pain", "chest ache", "chest sore", "pleuritic", "positional chest pain"],
+      "conditions": {
+        "no_flags": ["radiation to arm or jaw", "sweating with chest pain", "crushing pressure"],
+        "or_flags": ["positional", "reproducible on palpation", "young patient", "sharp localised"]
+      },
+      "urgency": "URGENT",
+      "department": "Urgent Care / General Practice",
+      "escalate_to_human": false,
+      "reasoning": "Chest pain that is positional, sharp, localised, or reproducible on palpation suggests musculoskeletal or pleuritic aetiology rather than cardiac — still requires prompt evaluation.",
+      "required_info": ["pain_character", "age", "onset"],
+      "follow_up_questions": [
+        "Does the pain change when you press on the chest or change position?",
+        "Is it worse when taking a deep breath?",
+        "How long has it been present?"
+      ]
+    },
+    {
+      "id": "R07",
+      "category": "breathing_difficulty",
+      "label": "Severe Breathing Difficulty",
+      "trigger_keywords": ["can't breathe", "cannot breathe", "struggling to breathe", "breathless", "shortness of breath", "wheezing severe", "gasping"],
+      "conditions": {
+        "or_flags": ["unable to speak full sentences", "cyanosis", "accessory muscle use", "SpO2 < 92", "severe asthma attack", "anaphylaxis"]
+      },
+      "urgency": "IMMEDIATE",
+      "department": "Emergency / Resuscitation",
+      "escalate_to_human": true,
+      "reasoning": "Severe breathing difficulty with inability to speak in full sentences, cyanosis, or SpO2 < 92% is a life-threatening emergency requiring immediate airway management.",
+      "required_info": ["oxygen_saturation", "respiratory_rate", "speech_ability", "onset"],
+      "follow_up_questions": [
+        "Can the patient speak in full sentences?",
+        "Are the lips or fingernails turning blue?",
+        "What is the oxygen saturation if measurable?",
+        "Did this come on suddenly or has it been building?"
+      ]
+    },
+    {
+      "id": "R08",
+      "category": "breathing_difficulty",
+      "label": "Mild to Moderate Breathing Difficulty",
+      "trigger_keywords": ["short of breath", "breathless on exertion", "mild wheeze", "tight chest breathing"],
+      "conditions": {
+        "no_flags": ["cyanosis", "unable to speak", "SpO2 < 92"],
+        "or_flags": ["exertional only", "known asthma mild attack", "recent respiratory infection"]
+      },
+      "urgency": "URGENT",
+      "department": "Urgent Care / Respiratory",
+      "escalate_to_human": false,
+      "reasoning": "Mild-to-moderate breathlessness without danger signs warrants prompt assessment and may indicate infection, mild asthma exacerbation, or other respiratory conditions.",
+      "required_info": ["onset", "exertion_level", "existing_conditions"],
+      "follow_up_questions": [
+        "Is the breathlessness at rest or only with activity?",
+        "Does the patient have a history of asthma or COPD?",
+        "Any recent cough, fever, or chest infection?"
+      ]
+    },
+    {
+      "id": "R09",
+      "category": "abdominal_pain",
+      "label": "Acute / Severe Abdominal Pain",
+      "trigger_keywords": ["severe stomach pain", "abdominal pain", "belly pain", "stomach cramps severe", "appendix", "rigid abdomen"],
+      "conditions": {
+        "or_flags": ["sudden severe onset", "rigid abdomen", "rebound tenderness", "vomiting blood", "blood in stool", "fever with abdominal pain", "pregnancy with abdominal pain"]
+      },
+      "urgency": "IMMEDIATE",
+      "department": "Emergency / Surgery",
+      "escalate_to_human": true,
+      "reasoning": "Severe or acute abdominal pain with danger signs (rigidity, rebound tenderness, bleeding, fever) may indicate surgical emergency such as appendicitis, perforation, or ectopic pregnancy.",
+      "required_info": ["pain_onset", "pain_location", "associated_symptoms", "pregnancy_status", "last_bowel_movement"],
+      "follow_up_questions": [
+        "Where exactly is the pain and did it start suddenly?",
+        "Is the abdomen rigid or hard to touch?",
+        "Any vomiting? If so, any blood?",
+        "Is there fever?",
+        "Could the patient be pregnant?"
+      ]
+    },
+    {
+      "id": "R10",
+      "category": "abdominal_pain",
+      "label": "Mild / Chronic Abdominal Discomfort",
+      "trigger_keywords": ["stomach ache", "mild stomach pain", "bloating", "indigestion", "nausea", "cramps"],
+      "conditions": {
+        "no_flags": ["sudden severe onset", "rigid abdomen", "blood in stool or vomit", "fever with abdominal pain"],
+        "or_flags": ["gradual onset", "known IBS", "mild nausea", "bloating"]
+      },
+      "urgency": "STANDARD",
+      "department": "General Practice",
+      "escalate_to_human": false,
+      "reasoning": "Mild abdominal discomfort without danger signs is appropriate for standard GP assessment.",
+      "required_info": ["duration", "dietary_history", "bowel_habit_changes"],
+      "follow_up_questions": [
+        "How long have you had the discomfort?",
+        "Any changes in bowel habits?",
+        "Does it relate to eating?"
+      ]
+    },
+    {
+      "id": "R11",
+      "category": "edge_case",
+      "label": "Ambiguous / Incomplete Presentation — Vital Information Missing",
+      "trigger_keywords": ["not sure", "don't know", "maybe", "vague", "unclear", "just feel bad", "something's wrong"],
+      "conditions": {
+        "flags": ["critical_info_missing", "symptom_pattern_unclear", "conflicting_history"]
+      },
+      "urgency": "ESCALATE",
+      "department": "Triage Nurse / Senior Clinician",
+      "escalate_to_human": true,
+      "reasoning": "When critical information is absent, symptom patterns are unclear, or the patient's history contains conflicts, the case cannot be safely routed by automated triage. A qualified clinician must assess directly.",
+      "required_info": ["any_available_vitals", "primary_complaint_clarification"],
+      "follow_up_questions": [
+        "Can you tell me the single most bothersome symptom right now?",
+        "How long have you been feeling this way?",
+        "On a scale of 1–10, how severe is your discomfort?",
+        "Any known medical conditions or medications?"
+      ]
+    },
+    {
+      "id": "R12",
+      "category": "null_case",
+      "label": "Non-Medical / Administrative Request",
+      "trigger_keywords": ["appointment", "bill", "insurance", "paperwork", "records", "prescription refill", "certificate", "test results", "referral letter"],
+      "conditions": {
+        "flags": ["no_medical_symptom_detected"]
+      },
+      "urgency": "NOT_MEDICAL",
+      "department": "Patient Services / Administration",
+      "escalate_to_human": false,
+      "reasoning": "The request does not describe a medical symptom requiring clinical triage. The patient should be directed to the appropriate administrative service.",
+      "required_info": [],
+      "follow_up_questions": [
+        "Are you experiencing any physical symptoms today that need medical attention?"
+      ]
+    }
+  ]
+}
